@@ -5,9 +5,12 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
+use App\Http\Controllers\Client\CategoriesController;
+use App\Http\Controllers\client\ProductsController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
     public function boot()
     {
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
@@ -27,8 +31,17 @@ class AppServiceProvider extends ServiceProvider
                 ->success();
         });
 
+        // Share users with all views
         View::share('users', User::all());
-        
+
+        // Share categories with all views
+        View::share('categories', Category::all());
+
+        // Share paginated products with all views
+        View::share('products', Product::paginate(12));
+
+        // Share recent products with all views
+        view()->share('recentProducts', Product::orderBy('created_at', 'desc')->take(3)->get());
 
     }
 }

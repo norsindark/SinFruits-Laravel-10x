@@ -6,7 +6,7 @@
             <div class="single-footer-widget m-0">
               <div class="footer-logo">
                 <a href="index.html">
-                  <img src="assets/images/logo/footer.png" alt="Logo Image" />
+                  <img src="{{  asset('assets/images/logo/footer.png')}}" alt="Logo Image" />
                 </a>
               </div>
               <p class="desc-content">
