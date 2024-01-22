@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class CartsController extends Controller
 {
@@ -14,21 +15,24 @@ class CartsController extends Controller
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity');
 
-        $existingProduct = Cart::get($productId);
+        $userId = Auth::user()->id;
 
-        if ($existingProduct) {
-            $quantity += $existingProduct->quantity;
-            Cart::update($existingProduct->rowId, $quantity);
-        } else {
-            $product = Product::find($productId);
+        $userCart = Cart::where('user_id', $userId)->first();
 
-            if (!$product) {
-                return redirect()->back()->with('error', 'Product not found');
-            }
-
-            Cart::add($productId, $product->name, $quantity, $product->product_details->price);
+        if (!$userCart) {
+            $userCart = Cart::create([
+                'user_id' => $userId,
+            ]);
         }
 
+        $existingProduct = $userCart->products()->where('product_id', $productId)->first();
+
+        if ($existingProduct) {
+            $existingProduct->pivot->quantity += $quantity;
+            $existingProduct->pivot->save();
+        } else {
+            $userCart->products()->attach($productId, ['quantity' => $quantity]);
+        }
         return redirect()->back()->with('success', 'Product added to cart successfully');
     }
 }

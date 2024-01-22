@@ -112,7 +112,7 @@
                                 <div class="quantity-with_btn mb-4">
                                     {{-- quantity  --}}
                                     <div class="quantity">
-                                        <form action="{{ route('cart.add') }}" method="POST">
+                                        <form action="{{ route('client.cart.add') }}" method="POST">
                                             @csrf
                                             <div class="cart-plus-minus">
                                                 <input class="cart-plus-minus-box" name="quantity" value="1"
@@ -123,12 +123,14 @@
                                             <input type="hidden" name="product_id" value="{{ $product->id }}"> <br>
                                             {{-- add to cart  --}}
                                             <div class="add-to_cart">
-                                                <button type="submit" class="btn obrien-button primary-btn">Add to
-                                                    cart</button>
+                                                <button type="submit" class="btn obrien-button primary-btn">
+                                                    Add to cart
+                                                </button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
+
                                 @if (session('success'))
                                     <div class="alert alert-success">
                                         {{ session('success') }}

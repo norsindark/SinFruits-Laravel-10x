@@ -101,7 +101,6 @@ Route::prefix('/')->group(function () {
         Route::get('/', [CategoriesController::class, 'index'])->name('client.categories.index');
         Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
 
-        // Route::get('/products/sort/{criteria}', [ProductsController::class, 'sortProducts']);
     });
 
 
@@ -110,7 +109,7 @@ Route::prefix('/')->group(function () {
 
         Route::get('/details/{id}', [ProductsController::class, 'showDetails'])->name('client.product.details');
 
-        Route::post('/cart/add',[CartsController::class, 'addToCart'])->name('cart.add');
+        Route::post('/cart/add',[CartsController::class, 'addToCart'])->name('client.cart.add');
 
         // Route::get('/cart', 'CartController@showCart')->name('cart.show');
         // Route::get('/wishlist', 'WishlistController@showWishlist')->name('wishlist.show');

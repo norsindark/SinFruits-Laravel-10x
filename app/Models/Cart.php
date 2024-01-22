@@ -20,4 +20,9 @@ class Cart extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'cart_items')->withPivot('quantity');
+    }
 }
