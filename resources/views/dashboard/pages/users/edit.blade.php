@@ -27,6 +27,35 @@
                                         </ul>
                                     </div>
                                 @endif
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                <div class="mb-3">
+                                    <label for="avatar" class="form-label">Avatar:</label><br>
+                                    @if ($user->profile_image != null)
+                                        <div class="avatar avatar-xl position-relative">
+                                            <img src="{{ asset('storage/profile-images/' . $user->profile_image) }}"
+                                                alt="Profile Image">
+                                        </div>
+                                        <a href="javascript:;" class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                            onclick="confirmDelete({{ $user->id }})">
+                                            <i class="far fa-trash-alt me-2"></i>
+                                        </a>
+
+                                        <form id="deleteForm{{ $user->id }}"
+                                            action="{{ route('dashboard.users.deleteImage', $user->id) }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @else
+                                        <div>
+                                            Don't updated
+                                        </div>
+                                    @endif
+                                </div>
 
                                 <form action="{{ route('dashboard.users.update', $user->id) }}" method="POST">
                                     @csrf
@@ -41,18 +70,25 @@
                                     <div class="mb-3">
                                         <label for="status" class="form-label">Status:</label>
                                         <select class="form-select" id="status" name="status" required>
-                                            @foreach ([1 => 'Actived', 2 => 'Inactived', 3 => 'Banned'] as $value => $label)
+                                            @foreach ([1 => 'Actived', 2 => 'Inactive', 3 => 'Banned'] as $value => $label)
                                                 <option value="{{ $value }}"
                                                     {{ old('status', $user->status) == $value ? 'selected' : '' }}>
-                                                    {{ $label }}</option>
+                                                    {{ $label }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Role:</label>
-                                        <input type="text" class="form-control" id="name" name="name"
-                                            value="{{ old('name', $user->role) }}" required>
+                                        <label for="role" class="form-label">Role:</label>
+                                        <select class="form-select" id="role" name="role" required>
+                                            @foreach ([1 => 'Admin', 2 => 'User', 3 => 'Employee'] as $value => $label)
+                                                <option value="{{ $value }}"
+                                                    {{ old('role', $user->role) == $value ? 'selected' : '' }}>
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="mb-3">
@@ -61,18 +97,12 @@
                                             value="{{ old('email', $user->email) }}" readonly>
                                     </div>
 
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Avatar:</label> <br>
-                                        <div class="avatar avatar-xl position-relative">
-                                            <img src="{{ asset('storage/profile-images/' . $user->profile_image) }}"
-                                                alt="Profile Image">
-                                        </div>
-                                    </div>
 
-                                    <!-- Add other input fields as needed -->
 
                                     <button type="submit" class="btn btn-primary">Update User</button>
                                 </form>
+
+
                             </div>
                         </div>
                     </div>
@@ -84,6 +114,16 @@
 
             </div>
         </div>
+
+        {{-- Delete Image  --}}
+        <script>
+            function confirmDelete(userId) {
+                if (confirm('Are you sure you want to delete this image?')) {
+                    document.getElementById('deleteForm' + userId).submit();
+                }
+            }
+        </script>
+
         <script>
             var win = navigator.platform.indexOf('Win') > -1;
             if (win && document.querySelector('#sidenav-scrollbar')) {
