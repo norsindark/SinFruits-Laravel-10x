@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.4",
+        "mindscms/laravelshoppingcart": "^2.1",
         "symfony/dom-crawler": "^7.0"
     },
     "require-dev": {

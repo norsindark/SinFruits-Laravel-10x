@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -9,21 +10,24 @@ use App\Http\Controllers\Dashboard\WarehouseController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProductCrawlerController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\client\ProductsController;
+use App\Http\Controllers\Client\CategoriesController;
+use App\Http\Controllers\Client\CartsController;
 
 
-
+// Crawl Products
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
     Route::get('/crawl', [ProductCrawlerController::class, 'crawl'])->name('crawl');
 });
 
+
+// Crawl Product Details
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
     Route::get('/crawl-details', [ProductCrawlerController::class, 'crawlDetail'])->name('crawlDetail');
 });
 
-Route::get('/', function () {
-    return view('client.home.index');
-});
 
+// Dashboard
 Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function () {
 
     //author
@@ -81,20 +85,68 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('dashboard.users.edit');
         Route::put('/{user}', [UserController::class, 'update'])->name('dashboard.users.update');
         Route::put('/{user}/ban', [UserController::class, 'banUser'])->name('dashboard.users.ban');
-        Route::delete('/{id}/delete-image',[UserController::class, 'deleteImage'])->name('dashboard.users.deleteImage');
+        Route::delete('/{id}/delete-image', [UserController::class, 'deleteImage'])->name('dashboard.users.deleteImage');
     });
+});
+
+
+//Client
+Route::prefix('/')->group(function () {
+    Route::get('/', function () {
+        return view('client.home.index');
+    });
+
+    // categories
+    Route::prefix('/categories')->group(function () {
+        Route::get('/', [CategoriesController::class, 'index'])->name('client.categories.index');
+        Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
+
+        // Route::get('/products/sort/{criteria}', [ProductsController::class, 'sortProducts']);
+    });
+
+
+    // product 
+    Route::prefix('/product')->group(function () {
+
+        Route::get('/details/{id}', [ProductsController::class, 'showDetails'])->name('client.product.details');
+
+        Route::post('/cart/add',[CartsController::class, 'addToCart'])->name('cart.add');
+
+        // Route::get('/cart', 'CartController@showCart')->name('cart.show');
+        // Route::get('/wishlist', 'WishlistController@showWishlist')->name('wishlist.show');
+        // Route::post('/checkout', 'CheckoutController@processCheckout')->name('checkout.process');
+    });
+   
 });
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-// Profile
 
 Route::patch('/profile/update-image', [ProfileController::class, 'updateImage'])->name('profile.update-image');
 
