@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('dashboard.pages.users.index', compact('users'));
+        return view('dashboard.pages.users.index');
     }
 
     public function create()
@@ -21,17 +22,20 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the form data
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            // Add other validation rules as needed
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
         ]);
 
-        // Create a new user
-        User::create($request->all());
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->email_verified_at = now();
+        $user->save();
 
-        return redirect()->route('dashboard.pages.users.index')->with('success', 'User created successfully.');
+        return redirect()->route('dashboard.users.index')->with('success', 'User created successfully.');
     }
 
     public function show(User $user)
@@ -46,22 +50,39 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Validate the form data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            // Add other validation rules as needed
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|email|unique:users,email,' . $user->id,
+            'status' => 'required|in:1,2,3,4',
+            'role' => 'required|in:1,2,3',
         ]);
 
-        // Update the user
         $user->update($request->all());
 
-        return redirect()->route('dashboard.pages.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('dashboard.users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function banUser(Request $request, $id)
     {
-        $user->delete();
-        return redirect()->route('dashboard.pages.users.index')->with('success', 'User deleted successfully.');
+        $request->validate([
+            'status' => 'required|in:1,2,3',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update(['status' => 3]);
+
+        return redirect()->route('dashboard.users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function deleteImage($id)
+    {
+        $user = User::findOrFail($id);
+        if ($user->profile_image != null) {
+            Storage::delete('profile-images/' . $user->profile_image);
+        }
+        $user->update(['profile_image' => null]);
+
+        return redirect()->back()->with('success', 'Image deleted successfully.');
     }
 }

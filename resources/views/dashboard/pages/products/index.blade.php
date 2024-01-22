@@ -17,11 +17,11 @@
                                         </a>
                                     </h6>
 
-                                    <a href="javascript:;"  onclick="confirmCrawl()">
+                                    <a href="javascript:;" onclick="confirmCrawl()">
                                         <i class="fa fa-plus"></i>
                                         Product
                                     </a>
-                                    <a href="javascript:;"  onclick="confirmCrawlDetails()">
+                                    <a href="javascript:;" onclick="confirmCrawlDetails()">
                                         <i class="fa fa-plus"></i>
                                         Details
                                     </a>
@@ -115,6 +115,8 @@
 
             </div>
         </div>
+
+        {{-- Delete Product  --}}
         <script>
             function confirmDelete(productId) {
                 if (confirm('Are you sure you want to delete this category?')) {
@@ -122,6 +124,8 @@
                 }
             }
         </script>
+
+        {{-- Crawl Products  --}}
         <script>
             function confirmCrawl() {
                 if (confirm('Are you sure you want to crawl data?')) {
@@ -129,6 +133,8 @@
                 }
             }
         </script>
+
+        {{-- Crawl Product Details  --}}
         <script>
             function confirmCrawlDetails() {
                 if (confirm('Are you sure you want to crawl data?')) {

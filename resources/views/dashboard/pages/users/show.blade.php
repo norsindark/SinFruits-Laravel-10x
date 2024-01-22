@@ -45,11 +45,11 @@
                                         </tr>
                                         <tr>
                                             <th>Role</th>
-                                            <td>{{ ['Other Role', 'Admin', 'User'][$user->role] }}</td>
+                                            <td>{{ ['Employee', 'Admin', 'User'][$user->role] }}</td>
                                         </tr>
                                         <tr>
                                             <th>Status</th>
-                                            <td>{{ $user->email_verified_at ? 'Active' : 'Inactive' }}</td>
+                                            <td>{{ $user->email_verified_at ? 'Actived' : 'Inactive' }}</td>
                                         </tr>
                                         <tr>
                                             <th>Avatar</th>

@@ -72,15 +72,16 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
     });
 
-    //users
+    // users
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('dashboard.users.index');
-        Route::get('/create', [UserController::class, 'create'] )->name('dashboard.users.create');
-        Route::post('/store', [UserController::class, 'store'] )->name('dashboard.users.store');
-        Route::get('/{user}', [UserController::class, 'show'] )->name('dashboard.users.show');
-        Route::get('/{user}/edit', [UserController::class, 'edit'] )->name('dashboard.users.edit');
-        Route::put('/{user}', [UserController::class, 'update'] )->name('dashboard.users.update');
-        Route::delete('/{user}', [UserController::class, 'destroy'] )->name('dashboard.users.destroy');
+        Route::get('/create', [UserController::class, 'create'])->name('dashboard.users.create');
+        Route::post('/store', [UserController::class, 'store'])->name('dashboard.users.store');
+        Route::get('/{user}', [UserController::class, 'show'])->name('dashboard.users.show');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('dashboard.users.edit');
+        Route::put('/{user}', [UserController::class, 'update'])->name('dashboard.users.update');
+        Route::put('/{user}/ban', [UserController::class, 'banUser'])->name('dashboard.users.ban');
+        Route::delete('/{id}/delete-image',[UserController::class, 'deleteImage'])->name('dashboard.users.deleteImage');
     });
 });
 
@@ -115,11 +116,6 @@ Route::get('/password-reset', function () {
 
 
 
-
-//reset password
-// Route::get('/new-password', function () {
-//     return view('client.pages.users.password-reset');
-// })->name('user.newPass');
 
 
 //Verify Email

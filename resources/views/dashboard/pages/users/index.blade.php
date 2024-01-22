@@ -17,9 +17,16 @@
                                     </a>
                                 </div>
                             </div>
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
 
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
+
                                     @if ($users && count($users) > 0)
                                         <table class="table align-items-center mb-0">
                                             <thead>
@@ -34,6 +41,12 @@
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Email</th>
                                                     <th
+                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Role</th>
+                                                    <th
+                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Status</th>
+                                                    <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Actions</th>
                                                 </tr>
@@ -44,6 +57,18 @@
                                                         <td>{{ $user->id }}</td>
                                                         <td>{{ $user->name }}</td>
                                                         <td>{{ $user->email }}</td>
+
+                                                        {{-- role  --}}
+                                                        <td>
+                                                            {{ ['Order Status', 'Admin', 'User', 'Employee'][$user->role] }}
+                                                        </td>
+
+                                                        {{-- status  --}}
+                                                        <td>
+                                                            {{ ['Order Status', 'Actived', 'Inactive', 'Banned'][$user->status] }}
+                                                        </td>
+
+                                                        {{-- ban  --}}
                                                         <td class="text-center">
                                                             <a class="btn btn-link text-dark px-3 mb-0"
                                                                 href="{{ route('dashboard.users.show', $user->id) }}">
@@ -56,18 +81,25 @@
                                                                     aria-hidden="true"></i>Edit
                                                             </a>
 
-                                                            <a href="javascript:;"
-                                                                class="btn btn-link text-danger text-gradient px-3 mb-0"
-                                                                onclick="confirmDelete({{ $user->id }})">
-                                                                <i class="far fa-trash-alt me-2"></i>Delete
-                                                            </a>
+                                                            @if ($user->status != 3 && $user->role != 1)
+                                                                <a href="javascript:;"
+                                                                    class="btn btn-link text-danger text-gradient px-3 mb-0"
+                                                                    onclick="confirmBan({{ $user->id }})">
+                                                                    <i class="fas fa-ban me-2"></i>Ban
+                                                                </a>
 
-                                                            <form id="deleteForm{{ $user->id }}"
-                                                                action="{{ route('dashboard.users.destroy', $user->id) }}"
-                                                                method="POST" style="display: none;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
+                                                                <form id="banForm{{ $user->id }}"
+                                                                    action="{{ route('dashboard.users.ban', $user->id) }}"
+                                                                    method="POST" style="display: none;">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <input type="hidden" name="status" value="3">
+                                                                </form>
+                                                            @elseif($user->role == 1)
+                                                                Cann't Ban
+                                                            @else
+                                                                <i class="fas fa-ban me-2"></i>Banned
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -97,13 +129,43 @@
                 Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
             }
         </script>
+
+        {{-- confirm Ban  --}}
         <script>
-            function confirmDelete(userId) {
-                var confirmDelete = confirm("Are you sure you want to delete this user?");
-                if (confirmDelete) {
-                    document.getElementById('deleteForm' + userId).submit();
+            function confirmBan(userId) {
+                if (confirm('Are you sure you want to ban this user?')) {
+                    document.getElementById('banForm' + userId).submit();
                 }
             }
         </script>
+
+        {{-- confirm Update Role --}}
+        {{-- <script>
+            function confirmUpdateRole(userId) {
+                var selectedRole = document.getElementById('role').value;
+                document.getElementById('role' + userId).value = selectedRole;
+
+                if (confirm('Are you sure you want to update this role?')) {
+                    document.getElementById('updateFormRole' + userId).submit();
+                }
+            }
+        </script> --}}
+
+
+        {{-- confirm Update Status --}}
+
+        {{-- <script>
+            function confirmUpdateStatus(userId) {
+                var selectedStatus = document.getElementById('status').value;
+                document.getElementById('status' + userId).value = selectedStatus;
+
+                var confirmationMessage = 'Are you sure you want to update this Status?';
+
+                if (confirm(confirmationMessage)) {
+                    document.getElementById('updateFormStatus' + userId).submit();
+                }
+            }
+        </script> --}}
+
     </body>
 @endsection
