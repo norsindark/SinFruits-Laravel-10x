@@ -1,6 +1,6 @@
 # Project Spring 2024 - Block 1 - SinD
 
-This project is built using Laravel.
+This project is built using Laravel 10x.
 
 ## Contact:
 
