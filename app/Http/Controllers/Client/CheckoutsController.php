@@ -7,5 +7,7 @@ use Illuminate\Http\Request;
 
 class CheckoutsController extends Controller
 {
-    //
+    public function index(){
+        return view('client.pages.checkouts.index');
+    }
 }

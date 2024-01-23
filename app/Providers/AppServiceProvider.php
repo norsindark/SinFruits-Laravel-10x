@@ -9,8 +9,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
-use App\Http\Controllers\Client\CategoriesController;
-use App\Http\Controllers\client\ProductsController;
+use App\Services\CartService;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
                 ->subject('Verify Email Address')
@@ -43,5 +44,35 @@ class AppServiceProvider extends ServiceProvider
         // Share recent products with all views
         view()->share('recentProducts', Product::orderBy('created_at', 'desc')->take(3)->get());
 
+        // Share carts with all views
+        View::composer('*', function ($view) {
+            if (auth()->check()) {
+                $cartService = app(CartService::class);
+
+                $cartData = $cartService->getIndexData();
+                
+                $subTotal = isset($cartData['subTotal']) ? $cartData['subTotal'] : 0;
+                $vat = isset($cartData['vat']) ? $cartData['vat'] : 0;
+                $total = isset($cartData['total']) ? $cartData['total'] : 0;
+                $count = isset($cartData['count']) ? $cartData['count'] : 0;
+
+
+                $view->with([
+                    'cartItems' => $cartData['cartItems'],
+                    'subTotal' => $subTotal,
+                    'vat' => $vat,
+                    'total' => $total,
+                    'count' => $count,
+                ]);
+            } else {
+                $view->with([
+                    'cartItems' => [],
+                    'subTotal' => 0,
+                    'vat' => 0,
+                    'total' => 0,
+                    'count' => 0,
+                ]);
+            }
+        });
     }
 }

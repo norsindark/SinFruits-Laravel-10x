@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductWarehouse;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 // use App\Models\Product;
@@ -66,6 +67,17 @@ class WarehouseController extends Controller
     {
         $warehouse->delete();
 
+        return redirect()->route('dashboard.warehouses.index')->with('success', 'Warehouse deleted successfully.');
+    }
+
+    public function updateQuantity(Request $request, $productId)
+    {
+        $request->validate([
+            'quantity' => 'required|int',
+        ]);
+        $productWarehouse = ProductWarehouse::where('product_id', $productId)->first();
+
+        $productWarehouse->update($request->all());
         return redirect()->route('dashboard.warehouses.index')->with('success', 'Warehouse deleted successfully.');
     }
 }

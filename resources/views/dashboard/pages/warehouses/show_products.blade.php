@@ -53,9 +53,9 @@
                                                     <td>{{ $product->quantity }}</td>
                                                     <td class="text-center">
                                                         <a class="btn btn-link text-dark px-3 mb-0"
-                                                            href="{{ route('dashboard.warehouses.edit', $warehouse->id) }}">
+                                                            href="{{ url('dashboard.warehouses.updateQuantity', $product->product->id) }}">
                                                             <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true">
-                                                            </i>Edit quantity
+                                                            </i>update quantity
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -76,6 +76,7 @@
                     </div>
                 </div>
             </div>
+
             <script>
                 var win = navigator.platform.indexOf('Win') > -1;
                 if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -85,5 +86,6 @@
                     Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
                 }
             </script>
+
     </body>
 @endsection

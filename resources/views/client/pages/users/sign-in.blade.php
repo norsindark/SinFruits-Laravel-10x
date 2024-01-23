@@ -21,7 +21,9 @@
                     </div>
                 </div>
             </div>
-            <!-- Breadcrumb Area End Here -->
+
+
+
             <!-- Login Area Start Here -->
             <div class="login-register-area mt-no-text mb-no-text">
                 <div class="container container-default-2 custom-area">
@@ -32,15 +34,26 @@
                                     <h2 class="title-4 mb-2">Login</h2>
                                     <p class="desc-content">Please login using account detail bellow.</p>
                                 </div>
+
+                                {{-- login form --}}
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
+
+
+
                                     <div class="single-input-item mb-3">
                                         <input type="email" name="email" :value="old('email')" required autofocus
                                             autocomplete="username" placeholder="Email">
                                     </div>
+
+
+
                                     <div class="single-input-item mb-3">
                                         <input type="password" name="password" required autocomplete="current-password" placeholder="Password">
                                     </div>
+
+
+
                                     <div class="single-input-item mb-3">
                                         <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
                                             <div class="remember-meta mb-3">
@@ -52,6 +65,9 @@
                                             </div>
                                         </div>
                                     </div>
+
+
+
                                     @if (Route::has('password.request'))
                                         <div class="single-input-item mb-3">
                                             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
@@ -60,6 +76,10 @@
                                             </a>
                                         </div>
                                     @endif
+
+
+
+
                                     <div class="single-input-item mb-3">
                                         <button class="btn obrien-button-2 primary-color">{{ __('Log in') }}</button>
                                         <button class="btn obrien-button-2 primary-color">
@@ -69,24 +89,15 @@
                                             @endif
                                         </button>
                                     </div>
+
+
+                                    
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Login Area End Here -->
-
-            
-            <!-- Support Area Start Here -->
-            @include('client.components.support')
-            <!-- Support Area End Here -->
-
         </div>
-
-        <!-- JS
-                ============================================ -->
-
-
     </body>
 @endsection
