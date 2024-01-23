@@ -13,6 +13,8 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\client\ProductsController;
 use App\Http\Controllers\Client\CategoriesController;
 use App\Http\Controllers\Client\CartsController;
+use App\Http\Controllers\Client\CheckoutsController;
+use App\Http\Controllers\Client\OrdersController;
 
 
 // Crawl Products
@@ -123,6 +125,19 @@ Route::prefix('/')->group(function () {
         Route::get('/', [CartsController::class, 'index'])->name('client.cart.index');
         Route::post('/remove', [CartsController::class, 'remove'])->name('client.cart.remove');
         Route::put('/update-quantity/{productId}', [CartsController::class, 'updateQuantity'])->name('client.cart.updateQuantity');
+
+    });
+
+
+    // check out
+    Route::prefix('/checkout')->group(function () {
+        Route::get('/', [CheckoutsController::class, 'index'])->name('client.checkout.index');
+    });
+
+
+    // orders
+    Route::prefix('/order')->group(function () {
+        Route::post('/create-order', [OrdersController::class, 'create'])->name('client.create.order');
 
     });
 });

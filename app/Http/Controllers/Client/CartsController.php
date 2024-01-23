@@ -9,30 +9,49 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProductWarehouse;
+use App\Services\CartService;
 
 class CartsController extends Controller
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
 
     //index
     public function index()
     {
-        $userId = Auth::user()->id;
-        $cart = Cart::where('user_id', $userId)->first();
-
-        if (!$cart) {
-            return view('client.pages.carts.index', ['cartItems' => []]);
-        }
-
-        $cartItems = $cart->products;
-        $subTotal = $cartItems->sum(function ($item) {
-            return $item->product_details->price * $item->pivot->quantity;
-        });
-
-        $vat = $subTotal * 0.1;
-        $total = $subTotal + $vat;
-
-        return view('client.pages.carts.index', compact('cartItems', 'subTotal', 'vat', 'total'));
+        return view('client.pages.carts.index');
     }
+
+    // public function index()
+    // {
+    //     $cartData = $this->cartService->getIndexData();
+
+    //     $userId = Auth::user()->id;
+    //     $cart = Cart::where('user_id', $userId)->first();
+
+    //     if (!$cart) {
+    //         return view('client.pages.carts.index', ['cartItems' => []]);
+    //     }
+
+    //     $cartItems = $cart->products;
+    //     $subTotal = $cartItems->sum(function ($item) {
+    //         return $item->product_details->price * $item->pivot->quantity;
+    //     });
+
+    //     $vat = $subTotal * 0.1;
+    //     $total = $subTotal + $vat;
+
+    //     $cartItems = $cartData['cartItems'];
+    //     $subTotal = $cartData['subTotal'];
+    //     $vat = $cartData['vat'];
+    //     $total = $cartData['total'];
+
+    //     return view('client.pages.carts.index', compact('cartItems', 'subTotal', 'vat', 'total'));
+    // }
 
 
     // add to cart 

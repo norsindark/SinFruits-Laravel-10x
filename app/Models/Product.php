@@ -50,9 +50,9 @@ class Product extends Model
         return $this->belongsToMany(Cart::class, 'cart_items')->withPivot('quantity');
     }
 
-    //cart_products
-    public function cart_products()
+    //order items
+    public function orderItems()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->hasMany(OrderItem::class);
     }
 }

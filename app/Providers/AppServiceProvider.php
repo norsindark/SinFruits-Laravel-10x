@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\Cart;
 use App\Http\Controllers\Client\CategoriesController;
 use App\Http\Controllers\client\ProductsController;
+use App\Services\CartService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,7 +46,28 @@ class AppServiceProvider extends ServiceProvider
         view()->share('recentProducts', Product::orderBy('created_at', 'desc')->take(3)->get());
 
         // Share carts with all views
-        // View::share('carts', Cart::all());
+        View::composer('*', function ($view) {
+            if (auth()->check()) {
+                $cartService = app(CartService::class);
 
+                $cartData = $cartService->getIndexData();
+
+                $view->with([
+                    'cartItems' => $cartData['cartItems'],
+                    'subTotal' => $cartData['subTotal'],
+                    'vat' => $cartData['vat'],
+                    'total' => $cartData['total'],
+                    'count' => $cartData['count'],
+                ]);
+            } else {
+                $view->with([
+                    'cartItems' => [],
+                    'subTotal' => 0,
+                    'vat' => 0,
+                    'total' => 0,
+                    'count' => 0,
+                ]);
+            }
+        });
     }
 }

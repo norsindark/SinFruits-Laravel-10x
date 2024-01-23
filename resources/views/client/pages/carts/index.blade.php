@@ -97,7 +97,7 @@
                                                 {{-- update quantity  --}}
                                                 <td class="pro-quantity">
                                                     <div class="quantity">
-                                                        <form
+                                                        <form id="updateQuantityForm"
                                                             action="{{ route('client.cart.updateQuantity', ['productId' => $item->id]) }}"
                                                             method="post">
                                                             @csrf
@@ -112,12 +112,10 @@
                                                                 <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
                                                                 <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
                                                             </div>
-                                                            <button type="submit" style="color:black;"><i class="fa fa-save"> save</i></button>
+                                                            <button type="button" onclick="confirmUpdate()">Save</button>
                                                         </form>
                                                     </div>
                                                 </td>
-
-
 
 
                                                 {{-- sub total  --}}
@@ -188,7 +186,8 @@
                                         </table>
                                     </div>
                                 </div>
-                                <a href="{{ url('checkout') }}" class="btn obrien-button primary-btn d-block">
+                                <a id="checkoutForm" class="btn obrien-button primary-btn d-block"
+                                    onclick="confirmUpdate()">
                                     Proceed To Checkout
                                 </a>
                             </div>
@@ -201,60 +200,28 @@
                 </div>
             </div>
 
-
-            <!-- Support Area Start Here -->
-            <div class="support-area">
-                <div class="container container-default custom-area">
-                    <div class="row">
-                        <div class="col-lg-12 col-custom">
-                            <div class="support-wrapper d-flex">
-                                <div class="support-content">
-                                    <h1 class="title">Need Help ?</h1>
-                                    <p class="desc-content">Call our support 24/7 at 01234-567-890</p>
-                                </div>
-                                <div class="support-button d-flex align-items-center">
-                                    <a class="obrien-button primary-btn" href="contact-us.html">Contact now</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
 
-        {{-- remove item  --}}
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        {{-- update quantity --}}
         <script>
-            $(document).ready(function() {
-                $('.remove-from-cart').on('click', function() {
-                    var productId = $(this).data('product-id');
-
-                    // Hộp thoại xác nhận
-                    var isConfirmed = confirm('Are you sure you want to remove this product from the cart?');
-
-                    if (isConfirmed) {
-                        $.ajax({
-                            type: 'POST',
-                            url: '{{ route('client.cart.remove') }}',
-                            data: {
-                                '_token': '{{ csrf_token() }}',
-                                'product_id': productId
-                            },
-                            success: function(data) {
-                                // Xử lý sau khi sản phẩm được xóa thành công
-                                location.reload();
-                            },
-                            error: function(data) {
-                                console.log('Error:', data);
-                            }
-                        });
-                    }
-                });
-            });
+            function confirmUpdate() {
+                if (confirm('Are you sure you want to save the quantity update?')) {
+                    document.getElementById('updateQuantityForm').submit();
+                }
+            }
         </script>
 
+
+        {{-- proceed checkout --}}
+        <script>
+            function confirmUpdate() {
+                if (confirm('Are you sure you want to proceed to checkout?')) {
+                    window.location.href = document.getElementById('checkoutForm').href =
+                        "{{ route('client.checkout.index') }}";
+                }
+            }
+        </script>
 
     </body>
 @endsection

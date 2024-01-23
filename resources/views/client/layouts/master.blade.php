@@ -8,7 +8,7 @@
     <meta name="robots" content="noindex, follow" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/favicon.ico')}}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/font.awesome.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/ionicons.min.css') }}" />
@@ -31,6 +31,11 @@
         {{-- ========== header =========== --}}
 
         @yield('content')
+
+        {{-- support  --}}
+        @include('client.components.support')
+        {{-- support  --}}
+
 
         {{-- ========Footer======== --}}
         @include('client.layouts.footer')
@@ -55,6 +60,36 @@
     <script src="{{ asset('assets/js/plugins/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
+
+
+    {{-- remove product --}}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.remove-from-cart').on('click', function() {
+                var productId = $(this).data('product-id');
+
+                var isConfirmed = confirm('Are you sure you want to remove this product from the cart?');
+
+                if (isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('client.cart.remove') }}',
+                        data: {
+                            '_token': '{{ csrf_token() }}',
+                            'product_id': productId
+                        },
+                        success: function(data) {
+                            location.reload();
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
 
