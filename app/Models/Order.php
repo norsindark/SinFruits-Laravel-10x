@@ -17,6 +17,7 @@ class Order extends Model
         'email',
         'notes',
         'full_name',
+        'status',
     ];
 
 

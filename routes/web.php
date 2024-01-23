@@ -15,6 +15,7 @@ use App\Http\Controllers\Client\CategoriesController;
 use App\Http\Controllers\Client\CartsController;
 use App\Http\Controllers\Client\CheckoutsController;
 use App\Http\Controllers\Client\OrdersController;
+use App\Http\Controllers\Client\UsersController;
 
 
 // Crawl Products
@@ -125,7 +126,6 @@ Route::prefix('/')->group(function () {
         Route::get('/', [CartsController::class, 'index'])->name('client.cart.index');
         Route::post('/remove', [CartsController::class, 'remove'])->name('client.cart.remove');
         Route::put('/update-quantity/{productId}', [CartsController::class, 'updateQuantity'])->name('client.cart.updateQuantity');
-
     });
 
 
@@ -138,8 +138,24 @@ Route::prefix('/')->group(function () {
     // orders
     Route::prefix('/order')->group(function () {
         Route::post('/create-order', [OrdersController::class, 'create'])->name('client.create.order');
-
+        Route::post('/cancel', [OrdersController::class, 'cancelOrder'])->name('client.order.cancel');
     });
+
+
+    // profile
+    Route::prefix('/my-account')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('client.user.index');
+
+        Route::get('/profile', [UsersController::class, 'edit'])->name('client.profile.edit');
+        Route::patch('/profile', [UsersController::class, 'update'])->name('client.profile.update');
+        Route::put('password', [UsersController::class, 'updatePassword'])->name('client.password.updatePassword');
+        Route::put('/update-address', [UsersController::class, 'updateAddress'])->name('client.password.updateAddress');
+
+        // Route::delete('/profile', [UsersController::class, 'destroy'])->name('client.profile.destroy');
+    });
+
+    //users
+    Route::post('/logout', 'Auth\UsersController@logout')->name('client.user.logout');
 });
 
 

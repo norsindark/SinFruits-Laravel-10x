@@ -80,10 +80,6 @@
             </div>
             <!-- Login Area End Here -->
 
-
-            <!-- Support Area Start Here -->
-            @include('client.components.support')
-            <!-- Support Area End Here -->
         </div>
 
         <!-- JS-->

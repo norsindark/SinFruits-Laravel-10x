@@ -1,0 +1,70 @@
+{{-- Orders --}}
+                                            <div class="tab-pane fade" id="orders" role="tabpanel">
+                                                <div class="myaccount-content">
+                                                    <h3>Orders</h3>
+                                                    <div class="myaccount-table table-responsive text-center">
+                                                        <table class="table table-bordered">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th>Order</th>
+                                                                    <th>Date</th>
+                                                                    <th>Status</th>
+                                                                    <th>Total</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+
+                                                                {{-- Order details --}}
+                                                                @foreach ($orders as $item)
+                                                                    <tr>
+
+                                                                        {{-- id --}}
+                                                                        <td>IC {{ $item->id }}</td>
+
+                                                                        {{-- created at --}}
+                                                                        <td>{{ $item->created_at }}</td>
+
+                                                                        {{-- status --}}
+                                                                        <td>
+                                                                            {{ $item->status === 0 ? 'Pending' : ($item->status === 1 ? 'Processing' : 'Completed') }}
+                                                                        </td>
+
+
+                                                                        {{-- total amount --}}
+                                                                        <td>{{ number_format($item->total_amount, 0, '.', '.') }}
+                                                                            VNĐ
+                                                                        </td>
+
+                                                                        {{-- action --}}
+                                                                        <td>
+                                                                            <a href="cart.html"
+                                                                                class="btn obrien-button-2 primary-color rounded-0">
+                                                                                View
+                                                                            </a>
+
+                                                                            @if ($item->status === 0)
+                                                                                <a href="cart.html"
+                                                                                    class="btn obrien-button-2 primary-color rounded-0">
+                                                                                    Cancel
+                                                                                </a>
+                                                                            @else
+                                                                                <span
+                                                                                    class="btn obrien-button-2 primary-color rounded-0">
+                                                                                    Cann't Cancel
+                                                                                </span>
+                                                                            @endif
+
+                                                                        </td>
+
+
+                                                                    </tr>
+                                                                @endforeach
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>

@@ -9,10 +9,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
-use App\Models\Cart;
-use App\Http\Controllers\Client\CategoriesController;
-use App\Http\Controllers\client\ProductsController;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
                 ->subject('Verify Email Address')
@@ -51,13 +50,19 @@ class AppServiceProvider extends ServiceProvider
                 $cartService = app(CartService::class);
 
                 $cartData = $cartService->getIndexData();
+                
+                $subTotal = isset($cartData['subTotal']) ? $cartData['subTotal'] : 0;
+                $vat = isset($cartData['vat']) ? $cartData['vat'] : 0;
+                $total = isset($cartData['total']) ? $cartData['total'] : 0;
+                $count = isset($cartData['count']) ? $cartData['count'] : 0;
+
 
                 $view->with([
                     'cartItems' => $cartData['cartItems'],
-                    'subTotal' => $cartData['subTotal'],
-                    'vat' => $cartData['vat'],
-                    'total' => $cartData['total'],
-                    'count' => $cartData['count'],
+                    'subTotal' => $subTotal,
+                    'vat' => $vat,
+                    'total' => $total,
+                    'count' => $count,
                 ]);
             } else {
                 $view->with([

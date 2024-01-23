@@ -7,11 +7,20 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
 use App\Models\Cart;
+use App\Models\OrderCancellation;
 use App\Models\ProductWarehouse;
 use App\Models\ProductDetail;
 
 class OrdersController extends Controller
 {
+
+    //index
+    public function index()
+    {
+    }
+
+
+    // create order
     public function create(Request $request)
     {
         $request->validate([
@@ -66,6 +75,31 @@ class OrdersController extends Controller
         CartItem::where('cart_id', $cartId)->delete();
 
         return redirect()->back()->with('success', 'Order created successfully');
+    }
 
+
+    // cancel order
+    public function cancelOrder(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'cancel_reason' => 'required|string',
+        ]);
+
+        $order = Order::find($request->input('order_id'));
+
+        if ($order->status !== 0) {
+            return response()->json(['error' => 'Invalid order or order cannot be canceled.'], 422);
+        }
+
+        $order->status = 3;
+        $order->save();
+
+        OrderCancellation::create([
+            'order_id' => $order->id,
+            'cancel_reason' => $request->input('cancel_reason'),
+        ]);
+
+        return response()->json(['success' => 'Order cancelled successfully! You will receive a refund of 90% of the order value after 3-7 days from the date of cancellation.']);
     }
 }
