@@ -36,6 +36,12 @@
                         </li>
 
                         <li>
+                            <a href="{{ route('client.cart.index')}}">
+                                <span class="menu-text"> Cart</span>
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="about-us.html">
                                 <span class="menu-text"> About</span>
                             </a>

@@ -63,6 +63,8 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         Route::put('/{warehouse}', [WarehouseController::class, 'update'])->name('dashboard.warehouses.update');
         Route::delete('/{warehouse}', [WarehouseController::class, 'destroy'])->name('dashboard.warehouses.destroy');
         Route::get('/{warehouse}/products', [WarehouseController::class, 'showProducts'])->name('dashboard.warehouses.showProducts');
+
+        // Route::get('/{warehouse}/edit', [WarehouseController::class, 'updateQuantity'])->name('dashboard.warehouses.updateQuantity');
     });
 
     //products
@@ -100,22 +102,29 @@ Route::prefix('/')->group(function () {
     Route::prefix('/categories')->group(function () {
         Route::get('/', [CategoriesController::class, 'index'])->name('client.categories.index');
         Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
-
     });
 
 
-    // product 
+    // products
     Route::prefix('/product')->group(function () {
 
         Route::get('/details/{id}', [ProductsController::class, 'showDetails'])->name('client.product.details');
 
-        Route::post('/cart/add',[CartsController::class, 'addToCart'])->name('client.cart.add');
+        Route::post('/cart/add', [CartsController::class, 'addToCart'])->name('client.cart.add');
 
         // Route::get('/cart', 'CartController@showCart')->name('cart.show');
         // Route::get('/wishlist', 'WishlistController@showWishlist')->name('wishlist.show');
         // Route::post('/checkout', 'CheckoutController@processCheckout')->name('checkout.process');
     });
-   
+
+
+    // carts
+    Route::prefix('/cart')->group(function () {
+        Route::get('/', [CartsController::class, 'index'])->name('client.cart.index');
+        Route::post('/remove', [CartsController::class, 'remove'])->name('client.cart.remove');
+        Route::put('/update-quantity/{productId}', [CartsController::class, 'updateQuantity'])->name('client.cart.updateQuantity');
+
+    });
 });
 
 

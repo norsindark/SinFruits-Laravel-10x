@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
+use App\Models\Cart;
 use App\Http\Controllers\Client\CategoriesController;
 use App\Http\Controllers\client\ProductsController;
 
@@ -42,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Share recent products with all views
         view()->share('recentProducts', Product::orderBy('created_at', 'desc')->take(3)->get());
+
+        // Share carts with all views
+        // View::share('carts', Cart::all());
 
     }
 }
