@@ -72,7 +72,7 @@
                             <div class="row shop_wrapper grid_list">
 
                                 {{-- products  --}}
-                                @foreach ($products as $product)
+                                @foreach ($searchProducts as $product)
                                     <div class="col-12 col-custom product-area">
                                         <div class="single-product position-relative">
 
@@ -181,54 +181,58 @@
                             {{-- Pagination --}}
                             <div class="row">
                                 <div class="col-sm-12 col-custom">
-                                    <div class="toolbar-bottom mt-30">
-                                        <nav class="pagination pagination-wrap mb-10 mb-sm-0">
-                                            <ul class="pagination">
-                                                {{-- Previous Page Link --}}
-                                                @if ($products->onFirstPage())
-                                                    <li class="disabled prev">
-                                                        <i class="ion-ios-arrow-thin-left"></i>
-                                                    </li>
-                                                @else
-                                                    <li class="prev">
-                                                        <a href="{{ $products->previousPageUrl() }}" rel="prev"
-                                                            title="Previous >>">
+                                    @if ($searchProducts->total() > 12)
+                                        <div class="toolbar-bottom mt-30">
+                                            <nav class="pagination pagination-wrap mb-10 mb-sm-0">
+                                                <ul class="pagination">
+                                                    {{-- Previous Page Link --}}
+                                                    @if ($searchProducts->onFirstPage())
+                                                        <li class="disabled prev">
                                                             <i class="ion-ios-arrow-thin-left"></i>
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                {{-- Pagination Elements --}}
-                                                @foreach ($products as $page => $url)
-                                                    @if ($page == $products->currentPage())
-                                                        <li class="active"><a>{{ $page }}</a></li>
+                                                        </li>
                                                     @else
-                                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                                        <li class="prev">
+                                                            <a href="{{ $searchProducts->previousPageUrl() }}"
+                                                                rel="prev" title="Previous >>">
+                                                                <i class="ion-ios-arrow-thin-left"></i>
+                                                            </a>
+                                                        </li>
                                                     @endif
-                                                @endforeach
 
-                                                {{-- Next Page Link --}}
-                                                @if ($products->hasMorePages())
-                                                    <li class="next">
-                                                        <a href="{{ $products->nextPageUrl() }}" rel="next"
-                                                            title="Next >>">
+                                                    {{-- Pagination Elements --}}
+                                                    @foreach ($searchProducts as $page => $url)
+                                                        @if ($page == $searchProducts->currentPage())
+                                                            <li class="active"><a>{{ $page }}</a></li>
+                                                        @else
+                                                            <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                                        @endif
+                                                    @endforeach
+
+                                                    {{-- Next Page Link --}}
+                                                    @if ($searchProducts->hasMorePages())
+                                                        <li class="next">
+                                                            <a href="{{ $searchProducts->nextPageUrl() }}" rel="next"
+                                                                title="Next >>">
+                                                                <i class="ion-ios-arrow-thin-right"></i>
+                                                            </a>
+                                                        </li>
+                                                    @else
+                                                        <li class="disabled next">
                                                             <i class="ion-ios-arrow-thin-right"></i>
-                                                        </a>
-                                                    </li>
-                                                @else
-                                                    <li class="disabled next">
-                                                        <i class="ion-ios-arrow-thin-right"></i>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </nav>
-                                        <p class="desc-content text-center text-sm-right">
-                                            Showing {{ $products->firstItem() }} - {{ $products->lastItem() }} of
-                                            {{ $products->total() }} results
-                                        </p>
-                                    </div>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            </nav>
+                                            <p class="desc-content text-center text-sm-right">
+                                                Showing {{ $searchProducts->firstItem() }} -
+                                                {{ $searchProducts->lastItem() }}
+                                                of {{ $searchProducts->total() }} results
+                                            </p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
+
 
 
 
@@ -247,17 +251,19 @@
                                     @include('client.pages.products.search')
 
 
+
                                     {{-- Menu Categories --}}
                                     @include('client.pages.categories.menu')
+
 
 
                                     {{-- Recent Products --}}
                                     @include('client.pages.products.recent')
 
 
+
                                 </div>
                             </aside>
-                            <!-- Sidebar Widget End -->
                         </div>
 
 

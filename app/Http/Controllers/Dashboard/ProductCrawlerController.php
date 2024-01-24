@@ -72,65 +72,6 @@ class ProductCrawlerController extends Controller
         }
     }
 
-    // public function crawlAndSaveImageTitle($imageSrc, $productId)
-    // {
-    //     $client = new Client();
-    //     $imageContents = file_get_contents('https://traicaytonyteo.com/' . ltrim($imageSrc, '/'));
-
-    //     $imageName = 'product_image_' . time() . '_' . uniqid() . '.jpg';
-
-    //     $imageUrl = asset('storage/products/' . $imageName);
-
-    //     Storage::put('public/products/' . $imageName, $imageContents);
-
-    //     ProductImage::create([
-    //         'product_id' => $productId,
-    //         'image_path' => $imageUrl,
-    //     ]);
-
-    //     return $imageUrl;
-    // }
-
-    // public function crawlDetail()
-    // {
-    //     $baseURL = 'https://traicaytonyteo.com/';
-    //     $client = new Client();
-    //     $products = Product::all();
-
-    //     foreach ($products as $product) {
-    //         $productTitle = $product->title;
-    //         $url = $baseURL . $productTitle;
-    //         $response = $client->get($url);
-    //         $html = $response->getBody()->getContents();
-    //         $crawler = new Crawler($html);
-    //         $descriptionCrawler = $crawler->filter('.description p span');
-    //         $description = $descriptionCrawler->count() > 0 ? $descriptionCrawler->text() : 'Trái cây sạch nhập khẩu, chỉ có tại SinFruit.';
-    //         $description = str_replace('Tony Tèo Fruit', 'SinFruit', $description);
-    //         $imageElements = $crawler->filter('.product-thumb img');
-    //         $imageUrls = $imageElements->each(function (Crawler $node, $i) {
-    //             return $node->attr('src');
-    //         });
-    //         $priceElement = $crawler->filter('#product-detail-price');
-    //         $priceText = $priceElement->count() > 0 ? $priceElement->text() : null;
-    //         $price = floatval(str_replace(['$', ','], '', $priceText));
-    //         if ($price <= 0 || $price == null) {
-    //             $price = 150000;
-    //         }
-    //         $existingProduct = Product::where('title', $productTitle)->first();
-
-    //         if ($existingProduct) {
-    //             $existingProduct->product_details()->updateOrCreate([], [
-    //                 'description' => $description,
-    //                 'price' => $price,
-    //             ]);
-    //             $existingProduct->productImages()->delete();
-    //             $existingProduct->productImages()->createMany(array_map(function ($url) {
-    //                 return ['image_path' => $url];
-    //             }, $imageUrls));
-    //         }
-    //     }
-    //     return Redirect::route('dashboard.products.index');
-    // }
 
     public function crawlDetail()
     {
@@ -165,12 +106,10 @@ class ProductCrawlerController extends Controller
             if ($existingProduct) {
                 $productDetails = $existingProduct->product_details()->updateOrCreate([], compact('description', 'price'));
 
-                // Fetch image URLs
                 $imageUrls = $crawler->filter('.product-thumb img')->each(function (Crawler $node, $i) {
                     return $node->attr('src');
                 });
 
-                // Use createMany for batch processing
                 $this->crawlAndSaveImages($imageUrls, $existingProduct->id);
             }
         }

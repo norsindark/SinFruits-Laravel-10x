@@ -23,7 +23,17 @@
                             <td>{{ $item->created_at }}</td>
                             {{-- status --}}
                             <td>
-                                {{ $item->status === 0 ? 'Pending' : ($item->status === 1 ? 'Processing' : ($item->status === 2 ? 'Completed' : ($item->status === 3 ? 'Canceled' : 'Unknown Status'))) }}
+                                {{ $item->status === 0
+                                    ? 'Pending'
+                                    : ($item->status === 1
+                                        ? 'Processing'
+                                        : ($item->status === 2
+                                            ? 'Completed'
+                                            : ($item->status === 3
+                                                ? 'Pending Cancellation'
+                                                : ($item->status === 4
+                                                    ? 'Canceled'
+                                                    : 'Unknown Status')))) }}
                             </td>
 
                             {{-- total amount --}}
@@ -42,8 +52,7 @@
                                         Cancel
                                     </button>
                                 @else
-                                    <span class="btn obrien-button-2 primary-color rounded-0">
-                                        Can't Cancel
+                                    <span class="fa-solid fa-ban btn btn obrien-button-2 primary-color rounded-0">
                                     </span>
                                 @endif
                             </td>

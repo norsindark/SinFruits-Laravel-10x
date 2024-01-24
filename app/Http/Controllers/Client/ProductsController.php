@@ -13,8 +13,17 @@ class ProductsController extends Controller
         $product = Product::find($id);
 
         if (!$product) {
-            abort(404); 
+            abort(404);
         }
         return view('client.pages.products.product-details', compact('product'));
+    }
+
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $searchProducts = Product::where('name', 'like', '%' . $keyword . '%')->paginate(12);
+
+        return view('client.pages.products.searchIndex', compact('searchProducts', 'keyword'));
     }
 }

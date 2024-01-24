@@ -72,7 +72,7 @@
                             <div class="row shop_wrapper grid_list">
 
                                 {{-- products  --}}
-                                @foreach ($products as $product)
+                                @foreach ($productsByCategory as $product)
                                     <div class="col-12 col-custom product-area">
                                         <div class="single-product position-relative">
 
@@ -185,22 +185,22 @@
                                         <nav class="pagination pagination-wrap mb-10 mb-sm-0">
                                             <ul class="pagination">
                                                 {{-- Previous Page Link --}}
-                                                @if ($products->onFirstPage())
+                                                @if ($productsByCategory->onFirstPage())
                                                     <li class="disabled prev">
                                                         <i class="ion-ios-arrow-thin-left"></i>
                                                     </li>
                                                 @else
                                                     <li class="prev">
-                                                        <a href="{{ $products->previousPageUrl() }}" rel="prev"
-                                                            title="Previous >>">
+                                                        <a href="{{ $productsByCategory->previousPageUrl() }}"
+                                                            rel="prev" title="Previous >>">
                                                             <i class="ion-ios-arrow-thin-left"></i>
                                                         </a>
                                                     </li>
                                                 @endif
 
                                                 {{-- Pagination Elements --}}
-                                                @foreach ($products as $page => $url)
-                                                    @if ($page == $products->currentPage())
+                                                @foreach ($productsByCategory as $page => $url)
+                                                    @if ($page == $productsByCategory->currentPage())
                                                         <li class="active"><a>{{ $page }}</a></li>
                                                     @else
                                                         <li><a href="{{ $url }}">{{ $page }}</a></li>
@@ -208,9 +208,9 @@
                                                 @endforeach
 
                                                 {{-- Next Page Link --}}
-                                                @if ($products->hasMorePages())
+                                                @if ($productsByCategory->hasMorePages())
                                                     <li class="next">
-                                                        <a href="{{ $products->nextPageUrl() }}" rel="next"
+                                                        <a href="{{ $productsByCategory->nextPageUrl() }}" rel="next"
                                                             title="Next >>">
                                                             <i class="ion-ios-arrow-thin-right"></i>
                                                         </a>
@@ -223,8 +223,9 @@
                                             </ul>
                                         </nav>
                                         <p class="desc-content text-center text-sm-right">
-                                            Showing {{ $products->firstItem() }} - {{ $products->lastItem() }} of
-                                            {{ $products->total() }} results
+                                            Showing {{ $productsByCategory->firstItem() }} -
+                                            {{ $productsByCategory->lastItem() }} of
+                                            {{ $productsByCategory->total() }} results
                                         </p>
                                     </div>
                                 </div>
@@ -243,7 +244,8 @@
                             <aside class="sidebar_widget widget-mt">
                                 <div class="widget_inner">
 
-                                    {{-- Search Box --}}
+
+                                    {{-- search --}}
                                     @include('client.pages.products.search')
 
 
@@ -257,10 +259,7 @@
 
                                 </div>
                             </aside>
-                            <!-- Sidebar Widget End -->
                         </div>
-
-
                     </div>
                 </div>
             </div>

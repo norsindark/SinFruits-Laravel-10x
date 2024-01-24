@@ -16,7 +16,7 @@ use App\Http\Controllers\Client\CartsController;
 use App\Http\Controllers\Client\CheckoutsController;
 use App\Http\Controllers\Client\OrdersController;
 use App\Http\Controllers\Client\UsersController;
-
+use App\Http\Controllers\Dashboard\OrderController;
 
 // Crawl Products
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
@@ -31,9 +31,9 @@ Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
 
 
 // Dashboard
-Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(function () {
 
-    //author
+    // author
     Route::get('/', function () {
         if (auth()->check() && auth()->user()->role == 1) {
             return view('dashboard.pages.dashboard');
@@ -56,7 +56,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('dashboard.categories.destroy');
     });
 
-    //warehouses
+    // warehouses
     Route::prefix('/warehouses')->group(function () {
         Route::get('/', [WarehouseController::class, 'index'])->name('dashboard.warehouses.index');
         Route::get('/create', [WarehouseController::class, 'create'])->name('dashboard.warehouses.create');
@@ -70,7 +70,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         // Route::get('/{warehouse}/edit', [WarehouseController::class, 'updateQuantity'])->name('dashboard.warehouses.updateQuantity');
     });
 
-    //products
+    // products
     Route::prefix('/products')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('dashboard.products.index');
         Route::get('/create', [ProductController::class, 'create'])->name('dashboard.products.create');
@@ -92,6 +92,11 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified'])->group(function ()
         Route::put('/{user}/ban', [UserController::class, 'banUser'])->name('dashboard.users.ban');
         Route::delete('/{id}/delete-image', [UserController::class, 'deleteImage'])->name('dashboard.users.deleteImage');
     });
+
+    // orders
+    Route::prefix('/orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('dashboard.orders.index');
+    });
 });
 
 
@@ -104,7 +109,8 @@ Route::prefix('/')->group(function () {
     // categories
     Route::prefix('/categories')->group(function () {
         Route::get('/', [CategoriesController::class, 'index'])->name('client.categories.index');
-        Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
+        // Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
+        Route::get('/{category_slug}', [CategoriesController::class, 'showByCategory'])->name('client.products.showByCategory');
     });
 
 
@@ -114,10 +120,7 @@ Route::prefix('/')->group(function () {
         Route::get('/details/{id}', [ProductsController::class, 'showDetails'])->name('client.product.details');
 
         Route::post('/cart/add', [CartsController::class, 'addToCart'])->name('client.cart.add');
-
-        // Route::get('/cart', 'CartController@showCart')->name('cart.show');
-        // Route::get('/wishlist', 'WishlistController@showWishlist')->name('wishlist.show');
-        // Route::post('/checkout', 'CheckoutController@processCheckout')->name('checkout.process');
+        Route::get('/search', [ProductsController::class, 'search'])->name('client.products.search');
     });
 
 
