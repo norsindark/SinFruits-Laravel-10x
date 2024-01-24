@@ -19,8 +19,10 @@
                         <tr>
                             {{-- id --}}
                             <td>IC {{ $item->id }}</td>
+
                             {{-- created at --}}
                             <td>{{ $item->created_at }}</td>
+
                             {{-- status --}}
                             <td>
                                 {{ $item->status === 0
@@ -37,8 +39,9 @@
                             </td>
 
                             {{-- total amount --}}
-                            <td>{{ number_format($item->total_amount, 0, '.', '.') }}
-                                VNĐ</td>
+                            <td>
+                                {{ number_format($item->total_amount, 0, '.', '.') }} VNĐ
+                            </td>
 
                             {{-- action --}}
                             <td>
@@ -56,6 +59,7 @@
                                     </span>
                                 @endif
                             </td>
+
                         <tr>
                             <td colspan="5">
                                 <table class="table table-bordered">

@@ -7,6 +7,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderCancellation;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -39,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Share users with all views
         View::share('billOrders', Order::paginate(12));
+
+        // Share users with all views
+        View::share('reports', OrderCancellation::paginate(12));
 
         // Share categories with all views
         View::share('categories', Category::all());

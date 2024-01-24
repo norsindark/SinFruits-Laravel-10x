@@ -17,6 +17,7 @@ use App\Http\Controllers\Client\CheckoutsController;
 use App\Http\Controllers\Client\OrdersController;
 use App\Http\Controllers\Client\UsersController;
 use App\Http\Controllers\Dashboard\OrderController;
+use App\Http\Controllers\Dashboard\ReportController;
 
 // Crawl Products
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
@@ -96,6 +97,11 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     // orders
     Route::prefix('/orders')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('dashboard.orders.index');
+    });
+
+    // report
+    Route::prefix('/reports')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('dashboard.reports.index');
     });
 });
 

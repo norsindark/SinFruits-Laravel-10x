@@ -23,17 +23,18 @@
                                 </div>
                             @endif
 
-                            {{-- Titel --}}
+                            {{-- title --}}
                             <div class="card-header pb-0">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h6>Orders Table: </h6>
+                                    <h6>Reports Table:
+                                    </h6>
                                 </div>
                             </div>
 
 
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
-                                    @if ($billOrders && count($billOrders) > 0)
+                                    @if ($reports && count($reports) > 0)
                                         <table class="table align-items-center mb-0">
                                             <thead>
 
@@ -45,19 +46,15 @@
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Orders ID
+                                                    </th>
+                                                    <th
+                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                         User Email
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Date
-                                                    </th>
-                                                    <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Status
-                                                    </th>
-                                                    <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Total
+                                                        Created At
                                                     </th>
                                                     <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -69,38 +66,27 @@
 
 
                                             <tbody>
-                                                @foreach ($billOrders as $item)
+                                                @foreach ($reports as $item)
                                                     <tr>
+
                                                         {{-- id --}}
-                                                        <td>IC {{ $item->id }}</td>
+                                                        <td>{{ $item->id }}</td>
+
+                                                        {{-- order id --}}
+                                                        <td>{{ $item->order->id }}</td>
 
                                                         {{-- user email --}}
-                                                        <td>{{ $item->user->email }}</td>
+                                                        <td>{{ $item->order->user->email }}</td>
 
-                                                        {{-- order created at --}}
+                                                        {{-- report created at --}}
                                                         <td>{{ $item->created_at }}</td>
-
-                                                        {{-- status --}}
-                                                        <td>{{ ['Pending', 'Processing', 'Completed', 'Pending Cancellation', 'Canceled', 'Unknown Status'][$item->status] }}
-                                                        </td>
-
-                                                        {{-- price --}}
-                                                        <td>{{ number_format($item->total_amount, 0, '.', '.') }} VNĐ</td>
 
 
                                                         {{-- action --}}
                                                         <td class="text-center">
                                                             <a class="btn btn-link text-dark px-3 mb-0 view-btn"
-                                                                href="#" data-order-id="{{ $item->id }}">
-                                                                <i class="fas fa-eye text-dark me-2"></i>View
-                                                            </a>
-
-
-                                                            <a href="#"
-                                                                class="btn btn-link text-dark px-3 mb-0 edit-btn"
-                                                                data-order-id="{{ $item->id }}">
-                                                                <i class="fas fa-pencil-alt text-dark me-2"
-                                                                    aria-hidden="true"></i>Update status
+                                                                href="#" data-report-id="{{ $item->id }}">
+                                                                <i class="fas fa-eye text-dark me-2"></i>View Reason
                                                             </a>
 
                                                         </td>
@@ -109,17 +95,13 @@
                                                     </tr>
 
 
-                                                    {{-- edit status drop down --}}
-                                                    @include('dashboard.pages.orders.edit-status')
-
-
-                                                    {{-- Order items drop-down --}}
-                                                    @include('dashboard.pages.orders.order-drop-down')
+                                                    {{-- view reason drop down --}}
+                                                    @include('dashboard.pages.reports.view-reason')
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     @else
-                                        <p>No Orders found.</p>
+                                        <p>No Report found.</p>
                                     @endif
 
                                     {{-- pagination --}}
@@ -134,84 +116,37 @@
                     </div>
                 </div>
 
+
+
                 {{-- footer --}}
                 @include('dashboard.layouts.footer')
-                {{-- footer --}}
+
 
             </div>
         </div>
 
-        {{-- Remove Order  --}}
-        <script>
-            function confirmRemove(productId) {
-                if (confirm('Are you sure you want to delete this category?')) {
-                    document.getElementById('deleteForm' + productId).submit();
-                }
-            }
-        </script>
-
-
-        {{-- order view drop down --}}
+        {{-- view reason drop down --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.view-btn').forEach(function(btn) {
                     btn.addEventListener('click', function() {
-                        var orderId = this.getAttribute('data-order-id');
-
-                        toggleOrderItems(orderId);
+                        var reportId = this.getAttribute('data-report-id');
+                        toggleEditOptions(reportId);
                     });
                 });
 
-                function toggleOrderItems(orderId) {
-                    var orderItemsRow = document.getElementById('order-items-' + orderId);
-                    if (orderItemsRow) {
-                        if (orderItemsRow.style.display === 'table-row') {
-                            orderItemsRow.style.display = 'none';
-                        } else {
-                            orderItemsRow.style.display = 'table-row';
-                        }
-                        hideOtherOrderItems(orderId);
-                    }
-                }
-            })
-        </script>
-
-
-        {{-- order edit drop down --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.edit-btn').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var orderId = this.getAttribute('data-order-id');
-                        toggleEditOptions(orderId);
-                    });
-                });
-
-                function toggleEditOptions(orderId) {
-                    var editOptionsRow = document.getElementById('edit-options-' + orderId);
+                function toggleEditOptions(reportId) {
+                    var editOptionsRow = document.getElementById('view-options-' + reportId);
                     if (editOptionsRow) {
                         if (editOptionsRow.style.display === 'none') {
                             editOptionsRow.style.display = 'table-row';
                         } else {
                             editOptionsRow.style.display = 'none';
                         }
-
-                        hideOtherEditOptions(orderId);
+                        hideOtherEditOptions(reportId);
                     }
                 }
             });
-        </script>
-
-
-
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
         </script>
     </body>
 @endsection
