@@ -51,7 +51,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
             return view('dashboard.pages.categories.create');
         })->name('dashboard.categories.create');
         Route::post('/', [CategoryController::class, 'store'])->name('dashboard.categories.store');
-        Route::get('/{category}', [CategoryController::class, 'show'])->name('dashboard.categories.show');
+        Route::get('/{category_slug}', [CategoryController::class, 'showByCategory'])->name('dashboard.categories.showByCategory');
         Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('dashboard.categories.edit');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('dashboard.categories.update');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('dashboard.categories.destroy');
