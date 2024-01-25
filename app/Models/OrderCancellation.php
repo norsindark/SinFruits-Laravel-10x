@@ -12,6 +12,7 @@ class OrderCancellation extends Model
     protected $fillable = [
         'order_id',
         'cancel_reason',
+        'status',
     ];
 
     public function order()

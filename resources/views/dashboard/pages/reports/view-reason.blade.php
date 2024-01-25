@@ -12,10 +12,13 @@
             <tbody>
                 <tr>
                     <td>
-                        {{ $item->id}}
+                        {{ $item->id }}
                     </td>
                     <td class="text-center">
-                        {{ $item->cancel_reason }}
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $item->first()->cancel_reason }}"
+                            style="display: inline-block; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ \Illuminate\Support\Str::limit($item->first()->cancel_reason, 100, $end = '...') }}
+                        </span>
                     </td>
 
                 </tr>

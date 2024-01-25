@@ -112,7 +112,7 @@
                                                                 <div class="dec qtybutton"><i class="fa fa-minus"></i></div>
                                                                 <div class="inc qtybutton"><i class="fa fa-plus"></i></div>
                                                             </div>
-                                                            <button type="button" onclick="confirmUpdate()">Save</button>
+                                                            <button type="button" onclick="confirmUpdate()">Update</button>
                                                         </form>
                                                     </div>
                                                 </td>
@@ -152,9 +152,9 @@
                                         <button class="btn obrien-button primary-btn">Apply Coupon</button>
                                     </form>
                                 </div>
-                                <div class="cart-update mt-sm-16">
+                                {{-- <div class="cart-update mt-sm-16">
                                     <a href="#" class="btn obrien-button primary-btn">Update Cart</a>
-                                </div>
+                                </div> --}}
                             </div>
                             {{-- Coupon  --}}
 

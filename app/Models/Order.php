@@ -33,4 +33,27 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+
+    // cancel order
+    // public function cancelOrder()
+    // {
+    //     return $this->hasOne(OrderCancellation::class);
+    // }
+    public function orderCancellations()
+    {
+        return $this->hasMany(OrderCancellation::class);
+    }
+
+    // Cancel order
+    public function cancelOrder()
+    {
+        $this->status = 4; 
+        $this->save();
+
+        // $cancellation = new OrderCancellation();
+        // $cancellation->order_id = $this->id;
+        // $cancellation->status = 1;
+        // $cancellation->update();
+    }
 }

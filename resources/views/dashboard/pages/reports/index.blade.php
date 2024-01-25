@@ -26,7 +26,7 @@
                             {{-- title --}}
                             <div class="card-header pb-0">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h6>Reports Table:
+                                    <h6>Reports Table: Processed
                                     </h6>
                                 </div>
                             </div>
@@ -57,6 +57,10 @@
                                                         Created At
                                                     </th>
                                                     <th
+                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Status
+                                                    </th>
+                                                    <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Actions
                                                     </th>
@@ -67,34 +71,35 @@
 
                                             <tbody>
                                                 @foreach ($reports as $item)
-                                                    <tr>
+                                                    @if ($item->status != 0)
+                                                        <tr>
 
-                                                        {{-- id --}}
-                                                        <td>{{ $item->id }}</td>
+                                                            {{-- id --}}
+                                                            <td>{{ $item->id }}</td>
 
-                                                        {{-- order id --}}
-                                                        <td>{{ $item->order->id }}</td>
+                                                            {{-- order id --}}
+                                                            <td>{{ $item->order->id }}</td>
 
-                                                        {{-- user email --}}
-                                                        <td>{{ $item->order->user->email }}</td>
+                                                            {{-- user email --}}
+                                                            <td>{{ $item->order->user->email }}</td>
 
-                                                        {{-- report created at --}}
-                                                        <td>{{ $item->created_at }}</td>
+                                                            {{-- report created at --}}
+                                                            <td>{{ $item->created_at }}</td>
 
-
-                                                        {{-- action --}}
-                                                        <td class="text-center">
-                                                            <a class="btn btn-link text-dark px-3 mb-0 view-btn"
-                                                                href="#" data-report-id="{{ $item->id }}">
-                                                                <i class="fas fa-eye text-dark me-2"></i>View Reason
-                                                            </a>
-
-                                                        </td>
+                                                            {{-- status --}}
+                                                            <td>{{ ['Pending', 'Processed', 'Unknown Status'][$item->status] }}
+                                                            </td>
 
 
-                                                    </tr>
-
-
+                                                            {{-- action --}}
+                                                            <td class="text-center">
+                                                                <a class="btn btn-link text-dark px-3 mb-0 view-btn"
+                                                                    href="#" data-report-id="{{ $item->id }}">
+                                                                    <i class="fas fa-eye text-dark me-2"></i>View Reason
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     {{-- view reason drop down --}}
                                                     @include('dashboard.pages.reports.view-reason')
                                                 @endforeach
@@ -110,6 +115,8 @@
                                     </div>
 
 
+                                    {{-- pending reports --}}
+                                    @include('dashboard.pages.reports.pending')
                                 </div>
                             </div>
                         </div>
@@ -148,5 +155,50 @@
                 }
             });
         </script>
+
+        {{-- view reason drop down --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.pending-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var reportId = this.getAttribute('data-report-id');
+                        toggleEditOptions(reportId);
+                    });
+                });
+
+                function toggleEditOptions(reportId) {
+                    var editOptionsRow = document.getElementById('pending-options-' + reportId);
+                    if (editOptionsRow) {
+                        if (editOptionsRow.style.display === 'none') {
+                            editOptionsRow.style.display = 'table-row';
+                        } else {
+                            editOptionsRow.style.display = 'none';
+                        }
+                        hideOtherEditOptions(reportId);
+                    }
+                }
+            });
+        </script>
+
+        {{-- submit form udpate status --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.confirm-action').forEach(function(btn) {
+                    btn.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        var orderId = this.getAttribute('data-order-id');
+                        var action = this.getAttribute('data-action');
+
+                        if (confirm('Are you sure you want to update ' + action +
+                                ' status for this order?')) {
+                            document.getElementById('confirmAction' + orderId).value = action;
+                            document.getElementById('confirmForm' + orderId).submit();
+                        }
+                    });
+                });
+            });
+        </script>
+
+
     </body>
 @endsection

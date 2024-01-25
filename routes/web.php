@@ -97,6 +97,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     // orders
     Route::prefix('/orders')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('dashboard.orders.index');
+        Route::post('/confirm/{orderId}',  [OrderController::class, 'confirmOrder'])->name('dashboard.orders.confirm');
     });
 
     // report
@@ -115,7 +116,6 @@ Route::prefix('/')->group(function () {
     // categories
     Route::prefix('/categories')->group(function () {
         Route::get('/', [CategoriesController::class, 'index'])->name('client.categories.index');
-        // Route::get('/{category}', [CategoriesController::class, 'show'])->name('client.categories.show');
         Route::get('/{category_slug}', [CategoriesController::class, 'showByCategory'])->name('client.products.showByCategory');
     });
 
