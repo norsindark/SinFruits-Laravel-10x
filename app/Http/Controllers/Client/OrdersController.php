@@ -79,7 +79,7 @@ class OrdersController extends Controller
 
         CartItem::where('cart_id', $cartId)->delete();
 
-        return redirect()->back()->with('success', 'Order created successfully');
+        return redirect()->route('client.cart.index')->with('success', 'Order created successfully');
     }
 
 
