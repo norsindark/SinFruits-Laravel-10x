@@ -25,17 +25,9 @@
 
                             {{-- status --}}
                             <td>
-                                {{ $item->status === 0
-                                    ? 'Pending'
-                                    : ($item->status === 1
-                                        ? 'Processing'
-                                        : ($item->status === 2
-                                            ? 'Completed'
-                                            : ($item->status === 3
-                                                ? 'Pending Cancellation'
-                                                : ($item->status === 4
-                                                    ? 'Canceled'
-                                                    : 'Unknown Status')))) }}
+                                {{ ['Pending', 'Processing', 'Confirm Paid', 'Pending Cancellation', 'Canceled', 'Completed', 'Unknown Status'][
+                                    $item->status
+                                ] }}
                             </td>
 
                             {{-- total amount --}}
@@ -65,6 +57,19 @@
                                 <table class="table table-bordered">
                                     <thead class="thead-light">
                                         <tr>
+                                            {{-- Bootstrap Progress Bar --}}
+                                            <div class="progress">
+                                                @php
+                                                    $progressColor = ($item->status === 3 || $item->status === 4) ? 'bg-danger' : 'bg-success';
+                                                @endphp
+                                                <div class="progress-bar progress-bar-striped {{ $progressColor }}" role="progressbar"
+                                                    style="width: {{ ($item->status + 1) * 20 }}%" aria-valuenow="{{ ($item->status + 1) * 20 }}" aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                    {{ ['Pending', 'Processing', 'Confirm Paid', 'Pending Cancellation', 'Canceled', 'Completed', 'Unknown Status'][$item->status] }}
+                                                </div>
+                                            </div>
+
+                                            {{-- Cancellation Reason Section --}}
                                             <div id="cancelReasonSection{{ $item->id }}" style="display: none;">
                                                 <label for="cancelReason{{ $item->id }}">Reason
                                                     for Cancellation:</label>

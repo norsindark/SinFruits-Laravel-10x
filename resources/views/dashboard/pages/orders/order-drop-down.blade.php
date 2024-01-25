@@ -1,6 +1,7 @@
 <tr class="order-items-row" style="display: none;" id="order-items-{{ $item->id }}">
     <td colspan="6">
         <table class="table align-items-center mb-0">
+            <h6 class="table text-center mb-0">Order Items Table</h6>
             <thead>
                 <tr>
                     <th>ID</th>
