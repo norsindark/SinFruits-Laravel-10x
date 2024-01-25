@@ -9,10 +9,12 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderCancellation;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\View;
 use App\Services\CartService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
@@ -56,13 +58,28 @@ class AppServiceProvider extends ServiceProvider
         // Share recent products with all views
         view()->share('recentProducts', Product::orderBy('created_at', 'desc')->take(3)->get());
 
+        // Share asc products with all views
+        view()->share('ascProducts', Product::orderBy('name', 'asc')->get());
+
+        // Share rating products with all views
+        // View::share(
+        //     'reviewProducts',
+        //     DB::table('products')
+        //         ->join('product_reviews', 'products.id', '=', 'product_reviews.product_id')
+        //         ->orderByDesc('product_reviews.rating')
+        //         ->take(3)
+        //         ->get()
+        // );
+
+
+
         // Share carts with all views
         View::composer('*', function ($view) {
             if (auth()->check()) {
                 $cartService = app(CartService::class);
 
                 $cartData = $cartService->getIndexData();
-                
+
                 $subTotal = isset($cartData['subTotal']) ? $cartData['subTotal'] : 0;
                 $vat = isset($cartData['vat']) ? $cartData['vat'] : 0;
                 $total = isset($cartData['total']) ? $cartData['total'] : 0;

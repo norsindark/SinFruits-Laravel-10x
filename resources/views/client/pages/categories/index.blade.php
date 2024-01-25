@@ -50,24 +50,7 @@
 
 
                                 {{-- sort products --}}
-                                <div class="shop-select">
-                                    <form class="d-flex flex-column w-100" action="{{ route('client.products.sorted') }}"
-                                        method="get" id="sortForm">
-                                        @csrf
-                                        <div class="form-group">
-                                            <select class="form-control nice-select w-100" name="sort_by" id="sortSelect">
-                                                <option selected value="1">Alphabetically, A-Z</option>
-                                                <option value="2">Sort by rating</option>
-                                                <option value="3">Sort by latest</option>
-                                                <option value="4">Sort by price: low to high</option>
-                                                <option value="5">Sort by price: high to low</option>
-                                            </select>
-                                        </div>
-                                        <button type="submit" id="sortButton">
-                                            <i class="fa-solid fa-check-to-slot"></i> sort
-                                        </button>
-                                    </form>
-                                </div>
+                                @include('client.pages.categories.sort')
 
                             </div>
 
@@ -97,21 +80,33 @@
                                             <div class="product-content">
 
                                                 {{-- Rating --}}
-                                                <div class="product-rating">
-                                                    @php
-                                                        $averageRating = $product->reviews->avg('rating');
-                                                    @endphp
+                                                @if ($product->productReviews && $product->productReviews->isNotEmpty())
+                                                    <div class="product-rating mb-3">
+                                                        @php
+                                                            $averageRating = $product->productReviews->avg('rating');
+                                                            $fullStars = floor($averageRating);
+                                                            $hasHalfStar = $averageRating - $fullStars >= 0.5;
+                                                        @endphp
 
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= $averageRating)
-                                                            <i class="fa fa-star"></i>
-                                                        @elseif ($i - $averageRating < 0.5)
-                                                            <i class="fa fa-star-half-o"></i>
-                                                        @else
-                                                            <i class="fa fa-star-o"></i>
-                                                        @endif
-                                                    @endfor
-                                                </div>
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= $fullStars)
+                                                                <i class="fa-solid fa-star"></i>
+                                                            @elseif ($hasHalfStar)
+                                                                <i class="fa-solid fa-star-half-stroke"></i>
+                                                                @php $hasHalfStar = false; @endphp
+                                                            @else
+                                                                <i class="fa fa-star-o"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                @else
+                                                    <div class="product-rating mb-3">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <i class="fa-regular fa-star"></i>
+                                                        @endfor
+                                                    </div>
+                                                @endif
+
 
                                                 {{-- Title --}}
                                                 <div class="product-title">
@@ -150,17 +145,32 @@
                                             <div class="product-content-listview">
 
                                                 {{-- Rating --}}
-                                                <div class="product-rating">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= $averageRating)
-                                                            <i class="fa fa-star"></i>
-                                                        @elseif ($i - $averageRating < 0.5)
-                                                            <i class="fa fa-star-half-o"></i>
-                                                        @else
-                                                            <i class="fa fa-star-o"></i>
-                                                        @endif
-                                                    @endfor
-                                                </div>
+                                                @if ($product->productReviews && $product->productReviews->isNotEmpty())
+                                                    <div class="product-rating mb-3">
+                                                        @php
+                                                            $averageRating = $product->productReviews->avg('rating');
+                                                            $fullStars = floor($averageRating);
+                                                            $hasHalfStar = $averageRating - $fullStars >= 0.5;
+                                                        @endphp
+
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= $fullStars)
+                                                                <i class="fa-solid fa-star"></i>
+                                                            @elseif ($hasHalfStar)
+                                                                <i class="fa-solid fa-star-half-stroke"></i>
+                                                                @php $hasHalfStar = false; @endphp
+                                                            @else
+                                                                <i class="fa-regular fa-star"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                @else
+                                                    <div class="product-rating mb-3">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <i class="fa-regular fa-star"></i>
+                                                        @endfor
+                                                    </div>
+                                                @endif
 
                                                 {{-- Title --}}
                                                 <div class="product-title">

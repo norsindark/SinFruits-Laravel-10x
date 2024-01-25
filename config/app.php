@@ -64,4 +64,13 @@ return [
         // 'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
     ])->toArray(),
 
+
+    // forbidden words
+    'forbidden_words' => [
+        'cmm',
+        'dmm',
+        'clmm',
+        'bad word',
+    ],
+
 ];

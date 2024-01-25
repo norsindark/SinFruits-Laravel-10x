@@ -73,27 +73,41 @@
 
                                 {{-- price  --}}
                                 <div class="price-box mb-2">
-                                    <span class="regular-price">{{ $product->product_details->price }}</span>
+                                    <span class="regular-price">{{ number_format($product->product_details->price) }}
+                                        VNĐ</span>
                                 </div>
 
 
-                                {{-- rating  --}}
+                                {{-- Rating --}}
+                                @if ($product->productReviews && $product->productReviews->isNotEmpty())
+                                    <div class="product-rating mb-3">
+                                        @php
+                                            $averageRating = $product->productReviews->avg('rating');
+                                            $roundedRating = round($averageRating, 1);
+                                            $fullStars = floor($averageRating);
+                                            $hasHalfStar = $averageRating - $fullStars >= 0.5;
+                                        @endphp
 
-                                <div class="product-rating mb-3">
-                                    @php
-                                        $averageRating = $product->reviews->avg('rating');
-                                    @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $fullStars)
+                                                <i class="fa-solid fa-star"></i>
+                                            @elseif ($hasHalfStar)
+                                                <i class="fa-solid fa-star-half-stroke"></i>
+                                                @php $hasHalfStar = false; @endphp
+                                            @else
+                                                <i class="fa-regular fa-star"></i>
+                                            @endif
+                                        @endfor
+                                        <span>( {{ $roundedRating }} ) </span>
+                                    </div>
+                                @else
+                                    <div class="product-rating mb-3">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i class="fa-regular fa-star"></i>
+                                        @endfor
+                                    </div>
+                                @endif
 
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $averageRating)
-                                            <i class="fa fa-star"></i>
-                                        @elseif ($i - $averageRating < 0.5)
-                                            <i class="fa fa-star-half-o"></i>
-                                        @else
-                                            <i class="fa fa-star-o"></i>
-                                        @endif
-                                    @endfor
-                                </div>
 
 
                                 {{-- ID  --}}
@@ -112,7 +126,7 @@
                                 <div class="sku mb-3">
                                     <span>Stocks: {{ $product->quantity->quantity }} </span>
                                 </div>
-                                
+
 
 
                                 {{-- add quantity to cart --}}
@@ -123,7 +137,7 @@
                                             @csrf
                                             <div class="cart-plus-minus">
                                                 <input class="cart-plus-minus-box" name="quantity" value="1"
-                                                    type="text"> 
+                                                    type="text">
                                                 <div class="dec qtybutton">-</div>
                                                 <div class="inc qtybutton">+</div>
                                             </div>
@@ -151,12 +165,10 @@
                                 @endif --}}
 
 
-
                                 {{-- buy  --}}
                                 <div class="buy-button mb-5">
                                     <a href="#" class="btn obrien-button-3 black-button">Buy it now</a>
                                 </div>
-
 
 
                                 {{-- contact  --}}
@@ -169,15 +181,11 @@
                                 </div>
 
 
-
                                 {{-- payment  --}}
                                 <div class="payment">
                                     <a href="#"><img class="border" src="assets/images/payment/img-payment.png"
                                             alt="Payment"></a>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -225,77 +233,93 @@
 
 
 
-
                                 {{-- tab reviews  --}}
                                 <div class="tab-pane fade" id="connect-2" role="tabpanel" aria-labelledby="profile-tab">
                                     <!-- Start Single Content -->
                                     <div class="product_tab_content  border p-3">
                                         <div class="review_address_inner">
 
-
-
-                                            {{-- User Reviews  --}}
-                                            <div class="pro_review mb-5">
-                                                <div class="review_thumb">
-                                                    <img alt="review images" src="assets/images/review/1.jpg">
-                                                </div>
-                                                <div class="review_details">
-                                                    <div class="review_info mb-2">
-                                                        <div class="product-rating mb-2">
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star-o"></i>
-                                                            <i class="fa fa-star-o"></i>
+                                            {{-- User Reviews --}}
+                                            @if ($product->review && $product->productReviews->isNotEmpty())
+                                                @foreach ($product->productReviews as $review)
+                                                    <div class="pro_review mb-5">
+                                                        <div class="review_thumb" style="max-width: 75px; max-height: 75px">
+                                                            @if ($review->user->profile_image)
+                                                                <img alt="{{ $review->user->name }}"
+                                                                    src="{{ asset('storage/profile-images/' . $review->user->profile_image) }}">
+                                                            @else
+                                                            <i class="fa fa-user" style="font-size: 50px; width: 50px; height: 50px;"></i>
+                                                            @endif
                                                         </div>
-                                                        <h5>Admin - <span> December 19, 2020</span></h5>
+
+                                                        <div class="review_details">
+                                                            <div class="review_info mb-2">
+                                                                <div class="product-rating mb-2">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        <i
+                                                                            class="fa-{{ $i <= $review->rating ? 'solid' : 'regular' }} fa-star"></i>
+                                                                    @endfor
+                                                                </div>
+                                                                <h5>{{ $review->user->name }}
+                                                                    <span>{{ $review->created_at->diffForHumans() }}</span>
+                                                                </h5>
+                                                            </div>
+                                                            <p>{{ $review->comment }}</p>
+                                                        </div>
                                                     </div>
-                                                    <p>
-                                                        @if ($product->product_reviews)
-                                                            {{ $product->product_reviews->comment }}
-                                                        @endif
-                                                    </p>
-                                                </div>
-                                            </div>
+                                                @endforeach
+                                            @else
+                                                <p>No reviews available for this product.</p>
+                                            @endif
+
+
+
+
                                         </div>
-
-
-
-                                        {{-- User Rating  --}}
-                                        <div class="rating_wrap">
-                                            <h6 class="rating-title-2 mb-2">Your Rating</h6>
-                                            <div class="rating_list mb-4">
-                                                <div class="review_info">
-                                                    <div class="product-rating mb-3">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star-o"></i>
-                                                        <i class="fa fa-star-o"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
 
                                         {{-- !Auth  --}}
-                                        <div class="comments-area comments-reply-area">
-                                            <div class="row">
-                                                <div class="col-lg-12 col-custom">
-                                                    <form action="#" class="comment-form-area">
-                                                        <div class="comment-form-comment mb-3">
-                                                            <label>Comment</label>
-                                                            <textarea class="comment-notes" required="required"></textarea>
-                                                        </div>
-                                                        <div class="comment-form-submit">
-                                                            <input type="submit" value="Submit"
-                                                                class="comment-submit btn obrien-button primary-btn">
-                                                        </div>
-                                                    </form>
+                                        @auth
+                                            <div class="comments-area comments-reply-area">
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-custom">
+                                                        <form action="{{ route('client.comments.store') }}"
+                                                            class="comment-form-area" method="POST">
+                                                            @csrf
+                                                            <div class="shop-select">
+                                                                <h6 class="rating-title-2 mb-2">Your Rating</h6>
+                                                                <div class="form-group">
+                                                                    <div class="review_info">
+                                                                        <select class="form-control nice-select w-100"
+                                                                            name="rating" id="rating" required>
+                                                                            <option value="1">1 Star</option>
+                                                                            <option value="2">2 Stars</option>
+                                                                            <option value="3">3 Stars</option>
+                                                                            <option value="4">4 Stars</option>
+                                                                            <option value="5">5 Stars</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="comment-form-comment mb-3">
+                                                                <label for="comment">Comment</label>
+                                                                <textarea id="comment" name="comment" class="comment-notes" required="required"></textarea>
+                                                            </div>
+                                                            <input type="hidden" name="product_id"
+                                                                value="{{ $product->id }}">
+
+                                                            <div class="comment-form-submit">
+
+                                                                <button value="Submit"
+                                                                    class="comment-submit btn obrien-button primary-btn"
+                                                                    type="submit">Submit Comment</button>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endauth
                                     </div>
                                     <!-- End Single Content -->
                                 </div>
@@ -352,6 +376,9 @@
                             </div>
                         </div>
                     </div>
+
+
+
                     <div class="row">
                         <div class="col-lg-12 product-wrapper col-custom">
                             <div class="product-slider"
@@ -373,49 +400,59 @@
                         "slidesToShow": 1
                         }}
                         ]'>
-                                <div class="single-item">
-                                    <div class="single-product position-relative">
-                                        <div class="product-image">
-                                            <a class="d-block" href="product-details.html">
-                                                <img src="assets/images/product/1.jpg" alt=""
-                                                    class="product-image-1 w-100">
-                                                <img src="assets/images/product/2.jpg" alt=""
-                                                    class="product-image-2 position-absolute w-100">
-                                            </a>
-                                        </div>
-                                        <div class="product-content">
-                                            <div class="product-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
+
+
+                                {{-- product --}}
+                                @foreach ($ascProducts as $item)
+                                    <div class="single-item">
+                                        <div class="single-product position-relative">
+                                            <div class="product-image">
+
+                                                <a class="d-block"
+                                                    style="min-height: 340px; min-weight:340px ;max-height: 340px; max-weight:340px"
+                                                    href="{{ route('client.product.details', $item->title) }}">
+                                                    @php
+                                                        $imagePath = $item->productImages->isNotEmpty() ? asset($item->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
+                                                    @endphp
+                                                    <img src="{{ $imagePath }}" alt="Product Image"
+                                                        class="img-fluid">
+                                                </a>
                                             </div>
-                                            <div class="product-title">
-                                                <h4 class="title-2"> <a href="product-details.html">Product dummy name</a>
-                                                </h4>
+
+                                            {{-- content --}}
+                                            <div class="product-content">
+
+
+                                                {{-- rating  --}}
+                                                @include('client.pages.products.rating')
+
+
+
+                                                {{-- title --}}
+                                                <div class="product-title">
+                                                    <h4 class="title-2"> <a
+                                                            href="{{ route('client.product.details', $item->title) }}">{{ $item->name }}</a>
+                                                    </h4>
+                                                </div>
+
+
+                                                {{-- price  --}}
+                                                <div class="price-box mb-2">
+                                                    <span
+                                                        class="regular-price">{{ number_format($item->product_details->price) }}
+                                                        VNĐ</span>
+                                                </div>
+
                                             </div>
-                                            <div class="price-box">
-                                                <span class="regular-price ">$80.00</span>
-                                                <span class="old-price"><del>$90.00</del></span>
+
+                                            {{-- icon --}}
+                                            <div class="add-action d-flex position-absolute">
+                                                <a href="{{ route('client.product.details', $item->title) }}"
+                                                    title="Details"><i class="fa-solid fa-circle-info"></i></a>
                                             </div>
-                                        </div>
-                                        <div class="add-action d-flex position-absolute">
-                                            <a href="cart.html" title="Add To cart">
-                                                <i class="ion-bag"></i>
-                                            </a>
-                                            <a href="compare.html" title="Compare">
-                                                <i class="ion-ios-loop-strong"></i>
-                                            </a>
-                                            <a href="wishlist.html" title="Add To Wishlist">
-                                                <i class="ion-ios-heart-outline"></i>
-                                            </a>
-                                            <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                                <i class="ion-eye"></i>
-                                            </a>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
 
                             </div>
                         </div>
@@ -458,49 +495,57 @@
                         "slidesToShow": 1
                         }}
                         ]'>
-                                <div class="single-item">
-                                    <div class="single-product position-relative">
-                                        <div class="product-image">
-                                            <a class="d-block" href="product-details.html">
-                                                <img src="assets/images/product/1.jpg" alt=""
-                                                    class="product-image-1 w-100">
-                                                <img src="assets/images/product/2.jpg" alt=""
-                                                    class="product-image-2 position-absolute w-100">
-                                            </a>
-                                        </div>
-                                        <div class="product-content">
-                                            <div class="product-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
+
+                                {{-- product --}}
+                                @foreach ($products as $item)
+                                    <div class="single-item">
+                                        <div class="single-product position-relative">
+                                            <div class="product-image">
+
+                                                <a class="d-block" style="min-height: 340px; min-weight:340px"
+                                                    href="{{ route('client.product.details', $item->title) }}">
+                                                    @php
+                                                        $imagePath = $item->productImages->isNotEmpty() ? asset($item->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
+                                                    @endphp
+                                                    <img src="{{ $imagePath }}" alt="Product Image"
+                                                        class="img-fluid">
+                                                </a>
                                             </div>
-                                            <div class="product-title">
-                                                <h4 class="title-2"> <a href="product-details.html">Product dummy name</a>
-                                                </h4>
+
+                                            {{-- content --}}
+                                            <div class="product-content">
+
+
+                                                {{-- rating  --}}
+                                                @include('client.pages.products.rating')
+
+
+                                                {{-- title --}}
+                                                <div class="product-title">
+                                                    <h4 class="title-2"> <a
+                                                            {{ route('client.product.details', $item->title) }}>{{ $item->name }}</a>
+                                                    </h4>
+                                                </div>
+
+
+                                                {{-- price  --}}
+                                                <div class="price-box mb-2">
+                                                    <span
+                                                        class="regular-price">{{ number_format($item->product_details->price) }}
+                                                        VNĐ</span>
+                                                </div>
+
                                             </div>
-                                            <div class="price-box">
-                                                <span class="regular-price ">$80.00</span>
-                                                <span class="old-price"><del>$90.00</del></span>
+
+                                            {{-- icon --}}
+                                            <div class="add-action d-flex position-absolute">
+                                                <a href="{{ route('client.product.details', $item->title) }}"
+                                                    title="Details"><i class="fa-solid fa-circle-info"></i></a>
                                             </div>
-                                        </div>
-                                        <div class="add-action d-flex position-absolute">
-                                            <a href="cart.html" title="Add To cart">
-                                                <i class="ion-bag"></i>
-                                            </a>
-                                            <a href="compare.html" title="Compare">
-                                                <i class="ion-ios-loop-strong"></i>
-                                            </a>
-                                            <a href="wishlist.html" title="Add To Wishlist">
-                                                <i class="ion-ios-heart-outline"></i>
-                                            </a>
-                                            <a href="#exampleModalCenter" data-bs-toggle="modal" title="Quick View">
-                                                <i class="ion-eye"></i>
-                                            </a>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
+
 
                             </div>
                         </div>

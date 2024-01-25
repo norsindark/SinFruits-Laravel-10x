@@ -36,7 +36,7 @@
                                             </li>
                                         @endforeach --}}
                                         @foreach ($categories as $category)
-                                            <li >
+                                            <li>
                                                 <a
                                                     href="{{ route('client.products.showByCategory', $category->slug) }}">
                                                     {{ $category->name }}
@@ -54,6 +54,11 @@
                                     <span class="menu-text"> Cart</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('client.user.index') }}" onclick="setActiveTab('orders')">
+                                    <span class="menu-text">Your Orders</span>
+                                </a>
+                            </li>
                         @endauth
 
                         <li>
@@ -61,6 +66,7 @@
                                 <span class="menu-text"> About</span>
                             </a>
                         </li>
+
                         <li>
                             <a href="contact-us.html">
                                 <span class="menu-text">Contact</span>
@@ -80,7 +86,12 @@
 
                             {{-- User -> Auth  --}}
                             @auth
-
+                            <div class="col-auto" style="max-width: 50px; max-height: 50px">
+                                <div class="avatar avatar-xl position-relative">
+                                    <img src="{{ asset('storage/profile-images/' . auth()->user()->profile_image) }}" alt="Profile Image" style="border-radius: 12px;">
+                                </div>
+                            </div>
+                            
                                 {{-- User  --}}
                                 <span
                                     class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
@@ -162,7 +173,7 @@
 
                                             {{-- image --}}
                                             <div class="cart-img">
-                                                <a href="{{ route('client.product.details', $item->id) }}">
+                                                <a href="{{ route('client.product.details', $item->title) }}">
                                                     @php
                                                         $imagePath = $item->productImages->isNotEmpty() ? asset($item->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                     @endphp
@@ -174,7 +185,7 @@
                                             {{-- title --}}
                                             <div class="cart-text">
                                                 <h5 class="title">
-                                                    <a href="#">
+                                                    <a href="{{ route('client.product.details', $item->title) }}">
                                                         {{ $item->name }}
                                                     </a>
                                                 </h5>
@@ -216,14 +227,14 @@
 
                                     {{-- Action  --}}
                                     @if ($cartItems->count() > 0)
-                                    <div class="cart-links d-flex justify-content-center">
-                                        <a class="obrien-button white-btn" href="{{ route('client.cart.index') }}">View
-                                            cart</a>
-                                        <a class="obrien-button white-btn"
-                                            href="{{ route('client.checkout.index') }}">Checkout</a>
-                                    </div>
+                                        <div class="cart-links d-flex justify-content-center">
+                                            <a class="obrien-button white-btn" href="{{ route('client.cart.index') }}">View
+                                                cart</a>
+                                            <a class="obrien-button white-btn"
+                                                href="{{ route('client.checkout.index') }}">Checkout</a>
+                                        </div>
                                     @endif
-                                    
+
 
 
                                 </div>

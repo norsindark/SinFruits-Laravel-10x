@@ -68,7 +68,7 @@
                                                 {{-- image thumbnail --}}
                                                 <td class="pro-thumbnail">
 
-                                                    <a href="{{ route('client.product.details', $item->id) }}">
+                                                    <a href="{{ route('client.product.details', $item->title) }}">
                                                         @php
                                                             $imagePath = $item->productImages->isNotEmpty() ? asset($item->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                         @endphp
@@ -80,7 +80,7 @@
 
                                                 {{-- title  --}}
                                                 <td class="pro-title">
-                                                    <a href="#">
+                                                    <a href="{{ route('client.product.details', $item->title) }}">
                                                         {{ $item->name }}
                                                     </a>
                                                 </td>

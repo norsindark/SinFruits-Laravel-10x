@@ -4,10 +4,12 @@ namespace App\Http\Controllers\client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductReview;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+
     public function showDetails($title)
     {
         $product = Product::where('title', $title)->first();
@@ -15,10 +17,21 @@ class ProductsController extends Controller
         if (!$product) {
             abort(404);
         }
-        return view('client.pages.products.product-details', compact('product'));
+
+        $reviews = ProductReview::where('product_id', $product->id)->get();
+
+        if ($reviews->isEmpty()) {
+            $reviews = [];
+        }
+
+        // dd($reviews);
+
+        return view('client.pages.products.product-details', compact('product', 'reviews'));
     }
 
 
+
+    // search products
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
@@ -27,6 +40,8 @@ class ProductsController extends Controller
         return view('client.pages.products.searchIndex', compact('searchProducts', 'keyword'));
     }
 
+
+    // sort products
     public function sortProducts(Request $request)
     {
         $sortOption = $request->input('sort_by');

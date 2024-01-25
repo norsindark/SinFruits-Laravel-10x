@@ -117,6 +117,35 @@
         });
     </script>
 
+
+    {{-- nav - your orders --}}
+    <script>
+        function setActiveTab(tabName) {
+            localStorage.removeItem('activeTab');
+            localStorage.setItem('activeTab', tabName);
+        }
+    </script>
+
+
+    {{-- sort --}}
+    <script>
+        $(document).ready(function() {
+            $('#sortSelect').change(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: $('#sortForm').attr('action'),
+                    data: $('#sortForm').serialize(),
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
