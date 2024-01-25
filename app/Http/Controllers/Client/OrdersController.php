@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\OrderCancellation;
 use App\Models\ProductWarehouse;
 use App\Models\ProductDetail;
+use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
 {
@@ -23,13 +24,17 @@ class OrdersController extends Controller
     // create order
     public function create(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'full_name' => 'required|string',
             'address' => 'required|string',
             'email' => 'required|email',
             'phone' => 'required|string',
             'order_notes' => 'nullable|string',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $order = Order::create([
             'user_id' => auth()->user()->id,
@@ -81,10 +86,14 @@ class OrdersController extends Controller
     // cancel order
     public function cancelOrder(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'order_id' => 'required|exists:orders,id',
             'cancel_reason' => 'required|string',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $order = Order::find($request->input('order_id'));
 

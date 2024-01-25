@@ -187,7 +187,7 @@
                                     </div>
                                 </div>
                                 <a id="checkoutForm" class="btn obrien-button primary-btn d-block"
-                                    onclick="confirmUpdate()">
+                                    onclick="confirmCheckout()">
                                     Proceed To Checkout
                                 </a>
                             </div>
@@ -215,7 +215,7 @@
 
         {{-- proceed checkout --}}
         <script>
-            function confirmUpdate() {
+            function confirmCheckout() {
                 if (confirm('Are you sure you want to proceed to checkout?')) {
                     window.location.href = document.getElementById('checkoutForm').href =
                         "{{ route('client.checkout.index') }}";

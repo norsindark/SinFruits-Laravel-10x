@@ -108,6 +108,13 @@
                                 </p>
 
 
+                                {{-- In stocks  --}}
+                                <div class="sku mb-3">
+                                    <span>Stocks: {{ $product->quantity->quantity }} </span>
+                                </div>
+                                
+
+
                                 {{-- add quantity to cart --}}
                                 <div class="quantity-with_btn mb-4">
                                     {{-- quantity  --}}
@@ -116,7 +123,7 @@
                                             @csrf
                                             <div class="cart-plus-minus">
                                                 <input class="cart-plus-minus-box" name="quantity" value="1"
-                                                    type="text">
+                                                    type="text"> 
                                                 <div class="dec qtybutton">-</div>
                                                 <div class="inc qtybutton">+</div>
                                             </div>
@@ -131,7 +138,7 @@
                                     </div>
                                 </div>
 
-                                @if (session('success'))
+                                {{-- @if (session('success'))
                                     <div class="alert alert-success">
                                         {{ session('success') }}
                                     </div>
@@ -141,7 +148,7 @@
                                     <div class="alert alert-danger">
                                         {{ session('error') }}
                                     </div>
-                                @endif
+                                @endif --}}
 
 
 

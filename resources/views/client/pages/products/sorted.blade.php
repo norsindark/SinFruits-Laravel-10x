@@ -48,11 +48,11 @@
                                 </div>
 
 
-
-                                {{-- sort products  --}}
+                                {{-- sort products --}}
                                 <div class="shop-select">
-                                    <form class="d-flex flex-column w-100" action="{{ url('products') }}" method="get"
-                                        id="sortForm">
+                                    <form class="d-flex flex-column w-100" action="{{ route('client.products.sorted') }}"
+                                        method="get" id="sortForm">
+                                        @csrf
                                         <div class="form-group">
                                             <select class="form-control nice-select w-100" name="sort_by" id="sortSelect">
                                                 <option selected value="1">Alphabetically, A-Z</option>
@@ -62,6 +62,9 @@
                                                 <option value="5">Sort by price: high to low</option>
                                             </select>
                                         </div>
+                                        <button type="submit">
+                                            <i class="fa-solid fa-check-to-slot"></i> sort
+                                        </button>
                                     </form>
                                 </div>
 
@@ -72,14 +75,14 @@
                             <div class="row shop_wrapper grid_list">
 
                                 {{-- products  --}}
-                                @foreach ($searchProducts as $product)
+                                @foreach ($sortedProducts as $product)
                                     <div class="col-12 col-custom product-area">
                                         <div class="single-product position-relative">
 
                                             {{-- Image --}}
                                             <div class="product-image">
                                                 <a class="d-block"
-                                                    href="{{ route('client.product.details', $product->id) }}">
+                                                    href="{{ route('client.product.details', $product->title) }}">
                                                     @php
                                                         $imagePath = $product->productImages->isNotEmpty() ? asset($product->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                     @endphp
@@ -112,7 +115,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 
@@ -125,9 +128,21 @@
 
                                             {{-- Add Action --}}
                                             <div class="add-action d-flex position-absolute">
-                                                <a href="cart.html" title="Add To cart"><i class="ion-bag"></i></a>
-                                                <a href="wishlist.html" title="Add To Wishlist"><i
-                                                        class="ion-ios-heart-outline"></i></a>
+                                                {{-- <form id="addToCartForm" action="{{ route('client.cart.add') }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="quantity" value="1">
+
+                                                    <div class="add-to_cart">
+                                                        <button type="submit" id="addToCartButton"></button>
+                                                    </div>
+                                                </form>
+
+                                                <a href="javascript:;" title="Add To cart" id="addToCartLink"><i
+                                                        class="ion-bag"></i></a> --}}
+                                                <a href="{{ route('client.product.details', $product->title) }}"
+                                                    title="Details"><i class="fa-solid fa-circle-info"></i></a>
                                             </div>
 
                                             {{-- Product Content Listview --}}
@@ -149,7 +164,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 
@@ -161,9 +176,8 @@
 
                                                 {{-- Action --}}
                                                 <div class="add-action-listview d-flex">
-                                                    <a href="cart.html" title="Add To cart"><i class="ion-bag"></i></a>
-                                                    <a href="wishlist.html" title="Add To Wishlist"><i
-                                                            class="ion-ios-heart-outline"></i></a>
+                                                    <a href="{{ route('client.product.details', $product->title) }}"
+                                                        title="Details"><i class="fa-solid fa-circle-info"></i></a>
                                                 </div>
 
                                                 {{-- Description --}}
@@ -190,7 +204,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
 
@@ -206,19 +219,17 @@
                                     @include('client.pages.products.search')
 
 
-
                                     {{-- Menu Categories --}}
                                     @include('client.pages.categories.menu')
-
 
 
                                     {{-- Recent Products --}}
                                     @include('client.pages.products.recent')
 
 
-
                                 </div>
                             </aside>
+                            <!-- Sidebar Widget End -->
                         </div>
 
 
@@ -234,10 +245,34 @@
         @include('client.components.modal')
         <!-- Modal Area End Here -->
 
-        <!-- Scroll to Top Start -->
-        <a class="scroll-to-top" href="#">
-            <i class="ion-chevron-up"></i>
-        </a>
+
+        {{-- info icon --}}
+        <script>
+            document.getElementById('addToCartLink').addEventListener('click', function() {
+                document.getElementById('addToCartForm').submit();
+            });
+        </script>
+
+
+        {{-- sort --}}
+        <script>
+            $(document).ready(function() {
+                $('#sortSelect').change(function() {
+                    $.ajax({
+                        type: 'GET',
+                        url: $('#sortForm').attr('action'),
+                        data: $('#sortForm').serialize(),
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                });
+            });
+        </script>
+
 
     </body>
 @endsection

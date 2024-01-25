@@ -83,7 +83,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     });
 
     // users
-    Route::prefix('/users')->group(function () {
+    Route::prefix('/users')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('dashboard.users.index');
         Route::get('/create', [UserController::class, 'create'])->name('dashboard.users.create');
         Route::post('/store', [UserController::class, 'store'])->name('dashboard.users.store');
@@ -95,12 +95,12 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     });
 
     // orders
-    Route::prefix('/orders')->group(function () {
+    Route::prefix('/orders')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('dashboard.orders.index');
     });
 
     // report
-    Route::prefix('/reports')->group(function () {
+    Route::prefix('/reports')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('dashboard.reports.index');
     });
 });
@@ -123,15 +123,16 @@ Route::prefix('/')->group(function () {
     // products
     Route::prefix('/product')->group(function () {
 
-        Route::get('/details/{id}', [ProductsController::class, 'showDetails'])->name('client.product.details');
+        Route::get('/details/{title}', [ProductsController::class, 'showDetails'])->name('client.product.details');
 
-        Route::post('/cart/add', [CartsController::class, 'addToCart'])->name('client.cart.add');
+        Route::post('/cart/add', [CartsController::class, 'addToCart'])->middleware(['auth', 'verified'])->name('client.cart.add');
         Route::get('/search', [ProductsController::class, 'search'])->name('client.products.search');
+        Route::get('/sorted', [ProductsController::class, 'sortProducts'])->name('client.products.sorted');
     });
 
 
     // carts
-    Route::prefix('/cart')->group(function () {
+    Route::prefix('/cart')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CartsController::class, 'index'])->name('client.cart.index');
         Route::post('/remove', [CartsController::class, 'remove'])->name('client.cart.remove');
         Route::put('/update-quantity/{productId}', [CartsController::class, 'updateQuantity'])->name('client.cart.updateQuantity');
@@ -139,20 +140,20 @@ Route::prefix('/')->group(function () {
 
 
     // check out
-    Route::prefix('/checkout')->group(function () {
+    Route::prefix('/checkout')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CheckoutsController::class, 'index'])->name('client.checkout.index');
     });
 
 
     // orders
-    Route::prefix('/order')->group(function () {
+    Route::prefix('/order')->middleware(['auth', 'verified'])->group(function () {
         Route::post('/create-order', [OrdersController::class, 'create'])->name('client.create.order');
         Route::post('/cancel', [OrdersController::class, 'cancelOrder'])->name('client.order.cancel');
     });
 
 
     // profile
-    Route::prefix('/my-account')->group(function () {
+    Route::prefix('/my-account')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [UsersController::class, 'index'])->name('client.user.index');
 
         Route::get('/profile', [UsersController::class, 'edit'])->name('client.profile.edit');
@@ -164,7 +165,7 @@ Route::prefix('/')->group(function () {
     });
 
     //users
-    Route::post('/logout', 'Auth\UsersController@logout')->name('client.user.logout');
+    Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
 });
 
 

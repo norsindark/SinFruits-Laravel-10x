@@ -7,11 +7,11 @@
             <div class="sidebar-product align-items-center">
 
                 {{-- Image --}}
-                <a href="#" class="image">
+                <a href="{{ route('client.product.details', $recentProduct->title) }}" class="image">
                     @php
                         $imagePath = $recentProduct->productImages->isNotEmpty() ? asset($recentProduct->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                     @endphp
-                    <img src="{{ $imagePath }}" alt="Product Image">
+                    <img src="{{ $imagePath }}" alt="{{ $recentProduct->title}}">
                 </a>
 
                 {{-- Content --}}
@@ -21,7 +21,7 @@
                     <div class="product-title">
                         <h4 class="title-2">
                             <a
-                                href="{{ url('product.details', $recentProduct->id) }}">
+                                href="{{ route('client.product.details', $recentProduct->title) }}">
                                 {{ $recentProduct->name }}
                             </a>
                         </h4>
