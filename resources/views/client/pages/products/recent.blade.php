@@ -11,7 +11,7 @@
                     @php
                         $imagePath = $recentProduct->productImages->isNotEmpty() ? asset($recentProduct->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                     @endphp
-                    <img src="{{ $imagePath }}" alt="{{ $recentProduct->title}}">
+                    <img src="{{ $imagePath }}" alt="{{ $recentProduct->title }}">
                 </a>
 
                 {{-- Content --}}
@@ -20,8 +20,7 @@
                     {{-- Title --}}
                     <div class="product-title">
                         <h4 class="title-2">
-                            <a
-                                href="{{ route('client.product.details', $recentProduct->title) }}">
+                            <a href="{{ route('client.product.details', $recentProduct->title) }}">
                                 {{ $recentProduct->name }}
                             </a>
                         </h4>
@@ -29,26 +28,37 @@
 
                     {{-- Price --}}
                     <div class="price-box">
-                        <span
-                            class="regular-price">${{ $recentProduct->product_details->price }}</span>
+                        <span class="regular-price">${{ $recentProduct->product_details->price }}</span>
                     </div>
 
                     {{-- Rating --}}
-                    <div class="product-rating">
-                        @php
-                            $averageRating = $recentProduct->reviews->avg('rating');
-                        @endphp
+                    @if ($recentProduct->productReviews && $recentProduct->productReviews->isNotEmpty())
+                        <div class="product-rating mb-3">
+                            @php
+                                $averageRating = $recentProduct->productReviews->avg('rating');
+                                $fullStars = floor($averageRating);
+                                $hasHalfStar = $averageRating - $fullStars >= 0.5;
+                            @endphp
 
-                        @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= $averageRating)
-                                <i class="fa fa-star"></i>
-                            @elseif ($i - $averageRating < 0.5)
-                                <i class="fa fa-star-half-o"></i>
-                            @else
-                                <i class="fa fa-star-o"></i>
-                            @endif
-                        @endfor
-                    </div>
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= $fullStars)
+                                    <i class="fa-solid fa-star"></i>
+                                @elseif ($hasHalfStar)
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                    @php $hasHalfStar = false; @endphp
+                                @else
+                                    <i class="fa-regular fa-star"></i>
+                                @endif
+                            @endfor
+                        </div>
+                    @else
+                        <div class="product-rating mb-3">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fa-regular fa-star"></i>
+                            @endfor
+                        </div>
+                    @endif
+
 
                 </div>
             </div>

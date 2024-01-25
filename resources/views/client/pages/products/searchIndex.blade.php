@@ -49,21 +49,8 @@
 
 
 
-                                {{-- sort products  --}}
-                                <div class="shop-select">
-                                    <form class="d-flex flex-column w-100" action="{{ url('products') }}" method="get"
-                                        id="sortForm">
-                                        <div class="form-group">
-                                            <select class="form-control nice-select w-100" name="sort_by" id="sortSelect">
-                                                <option selected value="1">Alphabetically, A-Z</option>
-                                                <option value="2">Sort by rating</option>
-                                                <option value="3">Sort by latest</option>
-                                                <option value="4">Sort by price: low to high</option>
-                                                <option value="5">Sort by price: high to low</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
+                                {{-- sort products --}}
+                                @include('client.pages.categories.sort')
 
                             </div>
 
@@ -79,7 +66,7 @@
                                             {{-- Image --}}
                                             <div class="product-image">
                                                 <a class="d-block"
-                                                    href="{{ route('client.product.details', $product->id) }}">
+                                                    href="{{ route('client.product.details', $product->title) }}">
                                                     @php
                                                         $imagePath = $product->productImages->isNotEmpty() ? asset($product->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                     @endphp
@@ -112,7 +99,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 
@@ -149,7 +136,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 

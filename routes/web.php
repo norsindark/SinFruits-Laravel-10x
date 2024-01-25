@@ -18,6 +18,7 @@ use App\Http\Controllers\Client\OrdersController;
 use App\Http\Controllers\Client\UsersController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ReportController;
+use App\Http\Controllers\Client\CommentsController;
 
 // Crawl Products
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
@@ -161,11 +162,14 @@ Route::prefix('/')->group(function () {
         Route::put('password', [UsersController::class, 'updatePassword'])->name('client.password.updatePassword');
         Route::put('/update-address', [UsersController::class, 'updateAddress'])->name('client.password.updateAddress');
 
-        // Route::delete('/profile', [UsersController::class, 'destroy'])->name('client.profile.destroy');
+        Route::patch('/profile/update-image', [UsersController::class, 'updateImage'])->name('client.profile.update-image');
     });
 
     //users
-    Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
+    Route::prefix('/users')->middleware(['auth'])->group(function () {
+        Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
+        Route::post('/comments', [CommentsController::class, 'store'])->name('client.comments.store');
+    });
 });
 
 

@@ -47,10 +47,10 @@
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Price
                                                     </th>
-                                                    {{-- <th
+                                                    <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                         in stock
-                                                    </th> --}}
+                                                    </th>
                                                     <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Actions
@@ -64,9 +64,9 @@
                                                         <td>{{ $product->name }}</td>
                                                         <td>{{ $product->product_details ? $product->product_details->price : 'N/A' }}
                                                         </td>
-                                                        {{-- <td>
-                                                            
-                                                        </td> --}}
+                                                        <td>
+                                                            {{ $product->quantity->quantity}}
+                                                        </td>
                                                         <td class="text-center">
 
 

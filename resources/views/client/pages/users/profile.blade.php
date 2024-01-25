@@ -85,6 +85,13 @@
                                             <div class="tab-pane fade show active" id="dashboad" role="tabpanel">
                                                 <div class="myaccount-content">
                                                     <h3>Dashboard</h3>
+                                                    <div class="col-auto" style="max-width: 50px; max-height: 50px">
+                                                        <div class="avatar avatar-xl position-relative">
+                                                            <img src="{{ asset('storage/profile-images/' . auth()->user()->profile_image) }}"
+                                                                alt="Profile Image">
+                                                        </div>
+                                                    </div>
+
                                                     <div class="welcome">
                                                         <p>Hello, <strong
                                                                 style="text-transform: uppercase">{{ Auth::user()->name }}</strong>
@@ -196,7 +203,7 @@
                                                     <div class="account-details-form">
 
 
-                                                        {{-- Form New --}}
+                                                        {{-- Form --}}
                                                         <form method="post" action="{{ route('client.profile.update') }}"
                                                             class="mt-6 space-y-6">
                                                             @csrf
@@ -237,7 +244,7 @@
 
 
 
-                                                        {{-- New Form Change Address - Phone --}}
+                                                        {{-- Form Change Address - Phone --}}
                                                         <form method="post"
                                                             action="{{ route('client.password.updateAddress') }}"
                                                             class="mt-6 space-y-6">
@@ -279,7 +286,7 @@
                                                         </form>
 
 
-                                                        {{-- New Form Change Password --}}
+                                                        {{-- Form Change Password --}}
                                                         <form method="post"
                                                             action="{{ route('client.password.updatePassword') }}"
                                                             class="mt-6 space-y-6">
@@ -358,6 +365,41 @@
                                                             </fieldset>
                                                         </form>
 
+
+                                                        {{-- Form change avatar --}}
+                                                        <form method="post" action="{{ route('client.profile.update-image') }}"
+                                                            enctype="multipart/form-data" class="mt-6 space-y-6">
+                                                            @csrf
+                                                            @method('patch')
+
+                                                            <fieldset>
+                                                                <legend>Avatar change</legend>
+
+                                                                {{-- Full name --}}
+                                                                <div class="single-input-item mb-3">
+                                                                    <label for="display-name"
+                                                                        class="required mb-1">Profile
+                                                                        Image</label>
+                                                                    <input type="file" id="profile_image"
+                                                                        name="profile_image" accept="image/*" />
+                                                                    <x-input-error class="alert alert-danger"
+                                                                        :messages="$errors->get('profile_image')" />
+
+
+                                                                </div>
+                                                                {{-- Button Save --}}
+                                                                <div class="single-input-item single-item-button">
+                                                                    <button class="btn obrien-button primary-btn">Save
+                                                                        Changes</button>
+                                                                    @if (session('status') === 'image-updated')
+                                                                        <p x-data="{ show: true }" x-show="show"
+                                                                            x-transition x-init="setTimeout(() => show = false, 2000)"
+                                                                            class="text-sm text-gray-600 dark:text-gray-400">
+                                                                            {{ __('Image updated.') }}</p>
+                                                                    @endif
+                                                                </div>
+                                                            </fieldset>
+                                                        </form>
 
                                                     </div>
                                                 </div>

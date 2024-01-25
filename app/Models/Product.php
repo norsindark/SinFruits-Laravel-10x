@@ -42,11 +42,19 @@ class Product extends Model
         return $this->hasOne(ProductDetail::class);
     }
 
+    
+
     //review
-    public function reviews()
+    public function productReviews()
     {
         return $this->hasMany(ProductReview::class);
     }
+    public function review()
+    {
+        return $this->hasOne(ProductReview::class);
+    }
+
+
 
     //product_images
     public function productImages()

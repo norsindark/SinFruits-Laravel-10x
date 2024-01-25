@@ -79,6 +79,27 @@ class UsersController extends Controller
     }
 
 
+    // update image
+    public function updateImage(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('profile_image')) {
+            $image = $request->file('profile_image');
+            $imageName = time() . '.' . $image->extension();
+            $image->storeAs('profile-images', $imageName, 'public');
+
+            auth()->user()->update(['profile_image' => $imageName]);
+
+            return redirect()->back()->with('success', 'image-updated');
+        }
+
+        return back()->withErrors(['profile_image' => 'Failed to upload image.']);
+    }
+
+
     // logout
     public function logout()
     {
