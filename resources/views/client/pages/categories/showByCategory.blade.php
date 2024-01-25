@@ -49,11 +49,10 @@
 
 
 
-                                {{-- sort products --}}
+                                {{-- sort products  --}}
                                 <div class="shop-select">
-                                    <form class="d-flex flex-column w-100" action="{{ route('client.products.sorted') }}"
-                                        method="get" id="sortForm">
-                                        @csrf
+                                    <form class="d-flex flex-column w-100" action="{{ url('products') }}" method="get"
+                                        id="sortForm">
                                         <div class="form-group">
                                             <select class="form-control nice-select w-100" name="sort_by" id="sortSelect">
                                                 <option selected value="1">Alphabetically, A-Z</option>
@@ -63,9 +62,6 @@
                                                 <option value="5">Sort by price: high to low</option>
                                             </select>
                                         </div>
-                                        <button type="submit" id="sortButton">
-                                            <i class="fa-solid fa-check-to-slot"></i> sort
-                                        </button>
                                     </form>
                                 </div>
 
@@ -76,14 +72,14 @@
                             <div class="row shop_wrapper grid_list">
 
                                 {{-- products  --}}
-                                @foreach ($products as $product)
+                                @foreach ($productsByCategory as $product)
                                     <div class="col-12 col-custom product-area">
                                         <div class="single-product position-relative">
 
                                             {{-- Image --}}
                                             <div class="product-image">
                                                 <a class="d-block"
-                                                    href="{{ route('client.product.details', $product->title) }}">
+                                                    href="{{ route('client.product.details', $product->id) }}">
                                                     @php
                                                         $imagePath = $product->productImages->isNotEmpty() ? asset($product->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                     @endphp
@@ -116,7 +112,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 
@@ -129,21 +125,9 @@
 
                                             {{-- Add Action --}}
                                             <div class="add-action d-flex position-absolute">
-                                                {{-- <form id="addToCartForm" action="{{ route('client.cart.add') }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <input type="hidden" name="quantity" value="1">
-
-                                                    <div class="add-to_cart">
-                                                        <button type="submit" id="addToCartButton"></button>
-                                                    </div>
-                                                </form>
-
-                                                <a href="javascript:;" title="Add To cart" id="addToCartLink"><i
-                                                        class="ion-bag"></i></a> --}}
-                                                <a href="{{ route('client.product.details', $product->title) }}"
-                                                    title="Details"><i class="fa-solid fa-circle-info"></i></a>
+                                                <a href="cart.html" title="Add To cart"><i class="ion-bag"></i></a>
+                                                <a href="wishlist.html" title="Add To Wishlist"><i
+                                                        class="ion-ios-heart-outline"></i></a>
                                             </div>
 
                                             {{-- Product Content Listview --}}
@@ -165,7 +149,7 @@
                                                 {{-- Title --}}
                                                 <div class="product-title">
                                                     <h4 class="title-2"><a
-                                                            href="{{ route('client.product.details', $product->title) }}">{{ $product->name }}</a>
+                                                            href="{{ route('client.product.details', $product->id) }}">{{ $product->name }}</a>
                                                     </h4>
                                                 </div>
 
@@ -177,8 +161,9 @@
 
                                                 {{-- Action --}}
                                                 <div class="add-action-listview d-flex">
-                                                    <a href="{{ route('client.product.details', $product->title) }}"
-                                                        title="Details"><i class="fa-solid fa-circle-info"></i></a>
+                                                    <a href="cart.html" title="Add To cart"><i class="ion-bag"></i></a>
+                                                    <a href="wishlist.html" title="Add To Wishlist"><i
+                                                            class="ion-ios-heart-outline"></i></a>
                                                 </div>
 
                                                 {{-- Description --}}
@@ -200,22 +185,22 @@
                                         <nav class="pagination pagination-wrap mb-10 mb-sm-0">
                                             <ul class="pagination">
                                                 {{-- Previous Page Link --}}
-                                                @if ($products->onFirstPage())
+                                                @if ($productsByCategory->onFirstPage())
                                                     <li class="disabled prev">
                                                         <i class="ion-ios-arrow-thin-left"></i>
                                                     </li>
                                                 @else
                                                     <li class="prev">
-                                                        <a href="{{ $products->previousPageUrl() }}" rel="prev"
-                                                            title="Previous >>">
+                                                        <a href="{{ $productsByCategory->previousPageUrl() }}"
+                                                            rel="prev" title="Previous >>">
                                                             <i class="ion-ios-arrow-thin-left"></i>
                                                         </a>
                                                     </li>
                                                 @endif
 
                                                 {{-- Pagination Elements --}}
-                                                @foreach ($products as $page => $url)
-                                                    @if ($page == $products->currentPage())
+                                                @foreach ($productsByCategory as $page => $url)
+                                                    @if ($page == $productsByCategory->currentPage())
                                                         <li class="active"><a>{{ $page }}</a></li>
                                                     @else
                                                         <li><a href="{{ $url }}">{{ $page }}</a></li>
@@ -223,9 +208,9 @@
                                                 @endforeach
 
                                                 {{-- Next Page Link --}}
-                                                @if ($products->hasMorePages())
+                                                @if ($productsByCategory->hasMorePages())
                                                     <li class="next">
-                                                        <a href="{{ $products->nextPageUrl() }}" rel="next"
+                                                        <a href="{{ $productsByCategory->nextPageUrl() }}" rel="next"
                                                             title="Next >>">
                                                             <i class="ion-ios-arrow-thin-right"></i>
                                                         </a>
@@ -238,8 +223,9 @@
                                             </ul>
                                         </nav>
                                         <p class="desc-content text-center text-sm-right">
-                                            Showing {{ $products->firstItem() }} - {{ $products->lastItem() }} of
-                                            {{ $products->total() }} results
+                                            Showing {{ $productsByCategory->firstItem() }} -
+                                            {{ $productsByCategory->lastItem() }} of
+                                            {{ $productsByCategory->total() }} results
                                         </p>
                                     </div>
                                 </div>
@@ -258,7 +244,8 @@
                             <aside class="sidebar_widget widget-mt">
                                 <div class="widget_inner">
 
-                                    {{-- Search Box --}}
+
+                                    {{-- search --}}
                                     @include('client.pages.products.search')
 
 
@@ -272,10 +259,7 @@
 
                                 </div>
                             </aside>
-                            <!-- Sidebar Widget End -->
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -288,17 +272,10 @@
         @include('client.components.modal')
         <!-- Modal Area End Here -->
 
-
-        {{-- info icon --}}
-        <script>
-            document.getElementById('addToCartLink').addEventListener('click', function() {
-                document.getElementById('addToCartForm').submit();
-            });
-        </script>
-
-
-        {{-- sort --}}
-
+        <!-- Scroll to Top Start -->
+        <a class="scroll-to-top" href="#">
+            <i class="ion-chevron-up"></i>
+        </a>
 
     </body>
 @endsection

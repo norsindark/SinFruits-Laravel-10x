@@ -9,6 +9,17 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-4">
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <div class="card-header pb-0">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6>Categories Table</h6>
@@ -31,6 +42,9 @@
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Name</th>
                                                     <th
+                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Products</th>
+                                                    <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Actions</th>
                                                 </tr>
@@ -40,10 +54,11 @@
                                                     <tr>
                                                         <td>{{ $category->id }}</td>
                                                         <td>{{ $category->name }}</td>
+                                                        <td>{{ $category->products->count() }}</td>
                                                         <td class="text-center">
                                                             <a class="btn btn-link text-dark px-3 mb-0"
-                                                                href="{{ route('dashboard.categories.show', $category->id) }}">
-                                                                <i class="fas fa-eye text-dark me-2" ></i>View
+                                                                href="{{ route('dashboard.categories.showByCategory', $category->slug) }}">
+                                                                <i class="fas fa-eye text-dark me-2"></i>View
                                                             </a>
 
                                                             <a class="btn btn-link text-dark px-3 mb-0"

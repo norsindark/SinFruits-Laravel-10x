@@ -6,8 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderCancellation;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\View;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Gate;
@@ -35,8 +38,17 @@ class AppServiceProvider extends ServiceProvider
         // Share users with all views
         View::share('users', User::all());
 
+        // Share users with all views
+        View::share('billOrders', Order::paginate(12));
+
+        // Share users with all views
+        View::share('reports', OrderCancellation::paginate(12));
+
         // Share categories with all views
         View::share('categories', Category::all());
+
+        // Share categories with all views
+        View::share('warehouses', Warehouse::all());
 
         // Share paginated products with all views
         View::share('products', Product::paginate(12));

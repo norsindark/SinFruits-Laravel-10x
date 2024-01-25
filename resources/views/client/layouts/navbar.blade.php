@@ -30,9 +30,17 @@
                                 <div class="menu-colum">
                                     <ul>
                                         <li><span class="mega-menu-text">Categories</span></li>
-                                        @foreach ($categories as $category)
+                                        {{-- @foreach ($categories as $category)
                                             <li><a
                                                     href="{{ url('category.show', $category->id) }}">{{ $category->name }}</a>
+                                            </li>
+                                        @endforeach --}}
+                                        @foreach ($categories as $category)
+                                            <li >
+                                                <a
+                                                    href="{{ route('client.products.showByCategory', $category->slug) }}">
+                                                    {{ $category->name }}
+                                                </a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -40,11 +48,13 @@
                             </div>
                         </li>
 
-                        <li>
-                            <a href="{{ route('client.cart.index') }}">
-                                <span class="menu-text"> Cart</span>
-                            </a>
-                        </li>
+                        @auth
+                            <li>
+                                <a href="{{ route('client.cart.index') }}">
+                                    <span class="menu-text"> Cart</span>
+                                </a>
+                            </li>
+                        @endauth
 
                         <li>
                             <a href="about-us.html">
@@ -128,6 +138,7 @@
                             @endauth
                         </li>
 
+
                         {{-- Mini Cart  --}}
                         @auth
                             <li class="minicart-wrap">
@@ -199,17 +210,20 @@
                                     {{-- total price  --}}
                                     <div class="cart-price-total d-flex justify-content-between">
                                         <h5>Total :</h5>
-                                        <h5> {{ number_format($total, 0, '.', '.') }} VNĐ</h5>
+                                        <h5> {{ number_format($subTotal, 0, '.', '.') }} VNĐ</h5>
                                     </div>
 
 
                                     {{-- Action  --}}
+                                    @if ($cartItems->count() > 0)
                                     <div class="cart-links d-flex justify-content-center">
                                         <a class="obrien-button white-btn" href="{{ route('client.cart.index') }}">View
                                             cart</a>
                                         <a class="obrien-button white-btn"
-                                            href="{{ url('/client/checkout/index') }}">Checkout</a>
+                                            href="{{ route('client.checkout.index') }}">Checkout</a>
                                     </div>
+                                    @endif
+                                    
 
 
                                 </div>

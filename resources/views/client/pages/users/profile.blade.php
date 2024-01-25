@@ -459,44 +459,5 @@
         </script>
 
 
-        {{-- <script>
-            function toggleCancelReasonSection(orderId) {
-                $('#cancelReasonSection' + orderId).slideToggle();
-                $('#cancelOrderError').hide();
-            }
-
-            function confirmCancellation(orderId) {
-                if (confirm('Are you sure you want to cancel this order?')) {
-                    confirmCancelOrder(orderId);
-                } else {
-                    $('#cancelReasonSection' + orderId).slideUp();
-                }
-            }
-
-            function confirmCancelOrder(orderId) {
-                var cancelReason = $('#cancelReason' + orderId).val();
-
-                $.ajax({
-                    url: '/order/cancel-order',
-                    type: 'POST',
-                    data: {
-                        order_id: orderId,
-                        cancel_reason: cancelReason,
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        $('#cancelReasonSection' + orderId).slideUp();
-                        $('#cancelOrderError').text('').hide();
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        var errorMessage = error.responseJSON.error ||
-                            'An error occurred while canceling the order.';
-                        $('#cancelOrderError').text(errorMessage).show();
-                    }
-                });
-            }
-        </script> --}}
-
     </body>
 @endsection

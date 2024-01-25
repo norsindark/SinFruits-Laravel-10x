@@ -10,7 +10,12 @@
                     <div class="col-12">
                         <div class="card mb-4">
                             <div class="card-header pb-0">
-                                <h6>Create Category</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6>Create Category</h6>
+                                    <a href="{{ route('dashboard.categories.index') }}" class="btn btn-primary">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </a>
+                                </div>
                             </div>
                             <div class="card-body">
                                 @if ($errors->any())
@@ -30,8 +35,6 @@
                                         <input type="text" class="form-control" id="name" name="name" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Create</button>
-                                    <a href="{{ route('dashboard.categories.index') }}" class="btn btn-secondary">Back to
-                                        Categories</a>
                                 </form>
 
                             </div>

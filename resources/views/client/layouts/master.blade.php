@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/nice-select.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/magnific-popup.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
@@ -29,6 +30,30 @@
         @include('client.layouts.menu')
 
         {{-- ========== header =========== --}}
+
+        {{-- notification --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        {{-- notification --}}
 
         @yield('content')
 

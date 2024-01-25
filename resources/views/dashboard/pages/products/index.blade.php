@@ -9,6 +9,17 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-4">
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                             <div class="card-header pb-0">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6>Products Table:

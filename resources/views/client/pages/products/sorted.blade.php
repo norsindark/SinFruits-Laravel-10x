@@ -48,7 +48,6 @@
                                 </div>
 
 
-
                                 {{-- sort products --}}
                                 <div class="shop-select">
                                     <form class="d-flex flex-column w-100" action="{{ route('client.products.sorted') }}"
@@ -63,7 +62,7 @@
                                                 <option value="5">Sort by price: high to low</option>
                                             </select>
                                         </div>
-                                        <button type="submit" id="sortButton">
+                                        <button type="submit">
                                             <i class="fa-solid fa-check-to-slot"></i> sort
                                         </button>
                                     </form>
@@ -76,7 +75,7 @@
                             <div class="row shop_wrapper grid_list">
 
                                 {{-- products  --}}
-                                @foreach ($products as $product)
+                                @foreach ($sortedProducts as $product)
                                     <div class="col-12 col-custom product-area">
                                         <div class="single-product position-relative">
 
@@ -199,54 +198,12 @@
                                     <div class="toolbar-bottom mt-30">
                                         <nav class="pagination pagination-wrap mb-10 mb-sm-0">
                                             <ul class="pagination">
-                                                {{-- Previous Page Link --}}
-                                                @if ($products->onFirstPage())
-                                                    <li class="disabled prev">
-                                                        <i class="ion-ios-arrow-thin-left"></i>
-                                                    </li>
-                                                @else
-                                                    <li class="prev">
-                                                        <a href="{{ $products->previousPageUrl() }}" rel="prev"
-                                                            title="Previous >>">
-                                                            <i class="ion-ios-arrow-thin-left"></i>
-                                                        </a>
-                                                    </li>
-                                                @endif
-
-                                                {{-- Pagination Elements --}}
-                                                @foreach ($products as $page => $url)
-                                                    @if ($page == $products->currentPage())
-                                                        <li class="active"><a>{{ $page }}</a></li>
-                                                    @else
-                                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
-                                                    @endif
-                                                @endforeach
-
-                                                {{-- Next Page Link --}}
-                                                @if ($products->hasMorePages())
-                                                    <li class="next">
-                                                        <a href="{{ $products->nextPageUrl() }}" rel="next"
-                                                            title="Next >>">
-                                                            <i class="ion-ios-arrow-thin-right"></i>
-                                                        </a>
-                                                    </li>
-                                                @else
-                                                    <li class="disabled next">
-                                                        <i class="ion-ios-arrow-thin-right"></i>
-                                                    </li>
-                                                @endif
+                                                {{ $products->links('vendor.pagination.bootstrap-5') }}
                                             </ul>
                                         </nav>
-                                        <p class="desc-content text-center text-sm-right">
-                                            Showing {{ $products->firstItem() }} - {{ $products->lastItem() }} of
-                                            {{ $products->total() }} results
-                                        </p>
                                     </div>
                                 </div>
                             </div>
-
-
-
                         </div>
 
 
@@ -298,6 +255,23 @@
 
 
         {{-- sort --}}
+        <script>
+            $(document).ready(function() {
+                $('#sortSelect').change(function() {
+                    $.ajax({
+                        type: 'GET',
+                        url: $('#sortForm').attr('action'),
+                        data: $('#sortForm').serialize(),
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                });
+            });
+        </script>
 
 
     </body>

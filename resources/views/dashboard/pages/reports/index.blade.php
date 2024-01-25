@@ -9,6 +9,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-4">
+
+                            {{-- Notification --}}
                             @if (session('success'))
                                 <div class="alert alert-success">
                                     {{ session('success') }}
@@ -20,20 +22,23 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
+
+                            {{-- title --}}
                             <div class="card-header pb-0">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h6>Products table: {{$category->name}} 
-                                        <a href="{{ route('dashboard.products.create') }}">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
+                                    <h6>Reports Table:
                                     </h6>
                                 </div>
                             </div>
+
+
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
-                                    @if ($productsByCategory && count($productsByCategory) > 0)
+                                    @if ($reports && count($reports) > 0)
                                         <table class="table align-items-center mb-0">
                                             <thead>
+
+                                                {{-- title menu --}}
                                                 <tr>
                                                     <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -41,73 +46,69 @@
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Name
+                                                        Orders ID
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Price
+                                                        User Email
                                                     </th>
-                                                    {{-- <th
+                                                    <th
                                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        in stock
-                                                    </th> --}}
+                                                        Created At
+                                                    </th>
                                                     <th
                                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Actions
                                                     </th>
                                                 </tr>
+
                                             </thead>
+
+
                                             <tbody>
-                                                @foreach ($productsByCategory as $product)
+                                                @foreach ($reports as $item)
                                                     <tr>
-                                                        <td>{{ $product->id }}</td>
-                                                        <td>{{ $product->name }}</td>
-                                                        <td>{{ $product->product_details ? $product->product_details->price : 'N/A' }}
-                                                        </td>
-                                                        {{-- <td>
-                                                            
-                                                        </td> --}}
+
+                                                        {{-- id --}}
+                                                        <td>{{ $item->id }}</td>
+
+                                                        {{-- order id --}}
+                                                        <td>{{ $item->order->id }}</td>
+
+                                                        {{-- user email --}}
+                                                        <td>{{ $item->order->user->email }}</td>
+
+                                                        {{-- report created at --}}
+                                                        <td>{{ $item->created_at }}</td>
+
+
+                                                        {{-- action --}}
                                                         <td class="text-center">
-
-
-                                                            <a class="btn btn-link text-dark px-3 mb-0"
-                                                                href="{{ route('dashboard.products.show', $product->id) }}">
-                                                                <i class="fas fa-eye text-dark me-2"></i>View
+                                                            <a class="btn btn-link text-dark px-3 mb-0 view-btn"
+                                                                href="#" data-report-id="{{ $item->id }}">
+                                                                <i class="fas fa-eye text-dark me-2"></i>View Reason
                                                             </a>
 
-                                                            <a class="btn btn-link text-dark px-3 mb-0"
-                                                                href="{{ route('dashboard.products.edit', $product->id) }}">
-                                                                <i class="fas fa-pencil-alt text-dark me-2"
-                                                                    aria-hidden="true">
-                                                                </i>Edit
-                                                            </a>
-
-                                                            <a href="javascript:;"
-                                                                class="btn btn-link text-danger text-gradient px-3 mb-0"
-                                                                onclick="confirmDelete({{ $product->id }})">
-                                                                <i class="far fa-trash-alt me-2"></i>Delete
-                                                            </a>
-
-                                                            <form id="deleteForm{{ $product->id }}"
-                                                                action="{{ route('dashboard.products.destroy', $product->id) }}"
-                                                                method="POST" style="display: none;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
                                                         </td>
+
+
                                                     </tr>
+
+
+                                                    {{-- view reason drop down --}}
+                                                    @include('dashboard.pages.reports.view-reason')
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     @else
-                                        <p>No products found.</p>
+                                        <p>No Report found.</p>
                                     @endif
 
                                     {{-- pagination --}}
                                     <div style="padding: 0px 120px;">
-                                        {{ $productsByCategory->links('vendor.pagination.bootstrap-5') }}
+                                        {{ $billOrders->links('vendor.pagination.bootstrap-5') }}
                                     </div>
-                                    {{-- pagination --}}
+
 
                                 </div>
                             </div>
@@ -115,22 +116,37 @@
                     </div>
                 </div>
 
+
+
                 {{-- footer --}}
                 @include('dashboard.layouts.footer')
-                {{-- footer --}}
+
 
             </div>
         </div>
 
-        {{-- Delete Product  --}}
+        {{-- view reason drop down --}}
         <script>
-            function confirmDelete(productId) {
-                if (confirm('Are you sure you want to delete this category?')) {
-                    document.getElementById('deleteForm' + productId).submit();
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.view-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var reportId = this.getAttribute('data-report-id');
+                        toggleEditOptions(reportId);
+                    });
+                });
+
+                function toggleEditOptions(reportId) {
+                    var editOptionsRow = document.getElementById('view-options-' + reportId);
+                    if (editOptionsRow) {
+                        if (editOptionsRow.style.display === 'none') {
+                            editOptionsRow.style.display = 'table-row';
+                        } else {
+                            editOptionsRow.style.display = 'none';
+                        }
+                        hideOtherEditOptions(reportId);
+                    }
                 }
-            }
+            });
         </script>
-
-
     </body>
 @endsection

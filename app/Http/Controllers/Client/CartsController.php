@@ -10,6 +10,7 @@ use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProductWarehouse;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Validator;
 
 class CartsController extends Controller
 {
@@ -113,9 +114,14 @@ class CartsController extends Controller
     // update quantity
     public function updateQuantity(Request $request, $productId)
     {
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'quantity' => 'required|int|min:1',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $newQuantity = $request->input('quantity');
 
