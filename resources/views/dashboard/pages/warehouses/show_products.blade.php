@@ -53,7 +53,7 @@
                                                     <td>{{ $product->quantity }}</td>
                                                     <td class="text-center">
                                                         <a class="btn btn-link text-dark px-3 mb-0"
-                                                            href="{{ url('dashboard.warehouses.updateQuantity', $product->product->id) }}">
+                                                            href="{{ route('dashboard.warehouses.updateQuantity', $product->product->id) }}">
                                                             <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true">
                                                             </i>update quantity
                                                         </a>

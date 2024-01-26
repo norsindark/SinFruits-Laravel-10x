@@ -16,7 +16,7 @@ class ProductsController extends Controller
         if (!$product) {
             abort(404);
         }
-        $reviews = $product->productReviews()->paginate(4);
+        $reviews = $product->productReviews()->paginate(12);
 
         if ($reviews->isEmpty()) {
             $reviews = [];

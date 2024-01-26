@@ -15,6 +15,7 @@
                 </thead>
                 <tbody>
                     {{-- Order details --}}
+                    @php $count = 1; @endphp
                     @foreach ($orders as $item)
                         <tr>
                             {{-- id --}}
@@ -41,17 +42,28 @@
                                     data-order-id="{{ $item->id }}">
                                     View
                                 </a>
+
+                                <a href="#" class="btn obrien-button-2 primary-color rounded-0 buy-again-link"
+                                    data-form-id="{{ $count }}">Buy Again</a>
+
+                                <form action="{{ route('client.orders.buyAgain', $item) }}" method="POST"
+                                    class="buy-again-form" data-form-id="{{ $count }}" style="display: none;">
+                                    @csrf
+                                </form>
+
                                 @if ($item->status === 0)
                                     <button class="btn obrien-button-2 primary-color rounded-0"
                                         onclick="toggleCancelReasonSection({{ $item->id }})">
                                         Cancel
                                     </button>
                                 @else
-                                    <span class="fa-solid fa-ban btn btn obrien-button-2 primary-color rounded-0">
+                                    <span class=" btn obrien-button-2 primary-color rounded-0">Canceled
                                     </span>
                                 @endif
                             </td>
 
+
+                            {{-- drop down action --}}
                         <tr>
                             <td colspan="5">
                                 <table class="table table-bordered">
@@ -60,14 +72,18 @@
                                             {{-- Bootstrap Progress Bar --}}
                                             <div class="progress">
                                                 @php
-                                                    $progressColor = ($item->status === 3 || $item->status === 4) ? 'bg-danger' : 'bg-success';
+                                                    $progressColor = $item->status === 3 || $item->status === 4 ? 'bg-danger' : 'bg-success';
                                                 @endphp
-                                                <div class="progress-bar progress-bar-striped {{ $progressColor }}" role="progressbar"
-                                                    style="width: {{ ($item->status + 1) * 20 }}%" aria-valuenow="{{ ($item->status + 1) * 20 }}" aria-valuemin="0"
+                                                <div class="progress-bar progress-bar-striped {{ $progressColor }}"
+                                                    role="progressbar" style="width: {{ ($item->status + 1) * 20 }}%"
+                                                    aria-valuenow="{{ ($item->status + 1) * 20 }}" aria-valuemin="0"
                                                     aria-valuemax="100">
                                                     {{ ['Pending', 'Processing', 'Confirm Paid', 'Pending Cancellation', 'Canceled', 'Completed', 'Unknown Status'][$item->status] }}
                                                 </div>
                                             </div>
+
+                                            <span style="font-size: 12px">Updated at:
+                                                {{ $item->updated_at->format('d-m H:i') }}</span>
 
                                             {{-- Cancellation Reason Section --}}
                                             <div id="cancelReasonSection{{ $item->id }}" style="display: none;">
@@ -106,7 +122,8 @@
                                                     {{ $orderItem->product->id }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('client.product.details', $item->id) }}">
+                                                    <a
+                                                        href="{{ route('client.product.details', $orderItem->product->title) }}">
                                                         @php
                                                             $imagePath = $orderItem->product->productImages->isNotEmpty() ? asset($orderItem->product->productImages->first()->image_path) : asset('path_to_default_image/default_image.jpg');
                                                         @endphp
@@ -128,6 +145,8 @@
                                 </table>
                             </td>
                         </tr>
+
+                        @php $count++; @endphp
                     @endforeach
                 </tbody>
             </table>

@@ -17,12 +17,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductWarehouse::class);
     }
-
     public function warehouses()
     {
         return $this->belongsToMany(Warehouse::class, 'product_warehouses');
     }
-
     public function quantity()
     {
         return $this->hasOne(ProductWarehouse::class, 'product_id');
@@ -68,6 +66,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Cart::class, 'cart_items')->withPivot('quantity');
     }
+    
 
     //order items
     public function orderItems()

@@ -25,17 +25,17 @@
     {{-- ======= aside ======= --}}
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-
+        
         <!-- Navbar -->
         @include('dashboard.components.navbar')
         <!-- End Navbar -->
-
+        @yield('content')
     </main>
 
     @include('dashboard.components.fixed-plugin')
 
 
-    @yield('content')
+    
     <script src="{{ asset('src/assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('src/assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('src/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>

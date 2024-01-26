@@ -23,11 +23,13 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+
     //product
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
+    
 
     //product warehouses
     public function productWarehouse()

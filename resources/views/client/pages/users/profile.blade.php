@@ -367,7 +367,8 @@
 
 
                                                         {{-- Form change avatar --}}
-                                                        <form method="post" action="{{ route('client.profile.update-image') }}"
+                                                        <form method="post"
+                                                            action="{{ route('client.profile.update-image') }}"
                                                             enctype="multipart/form-data" class="mt-6 space-y-6">
                                                             @csrf
                                                             @method('patch')
@@ -404,6 +405,8 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -500,6 +503,17 @@
             }
         </script>
 
+
+        {{-- buy again --}}
+        <script>
+            $(document).ready(function() {
+                $(".buy-again-link").click(function(e) {
+                    e.preventDefault();
+                    var formId = $(this).data('form-id');
+                    $(".buy-again-form[data-form-id='" + formId + "']").submit();
+                });
+            });
+        </script>
 
     </body>
 @endsection

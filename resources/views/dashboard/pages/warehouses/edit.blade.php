@@ -41,6 +41,8 @@
 
             </div>
         </div>
+
+        
         <script>
             function confirmDelete(categoryId) {
                 if (confirm('Are you sure you want to delete this category?')) {
@@ -48,6 +50,8 @@
                 }
             }
         </script>
+
+
         <script>
             var win = navigator.platform.indexOf('Win') > -1;
             if (win && document.querySelector('#sidenav-scrollbar')) {

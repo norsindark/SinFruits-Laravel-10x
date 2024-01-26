@@ -24,7 +24,7 @@
                 <p>{{ $review->comment }}</p>
             </div>
             <button class="btn obrien-button primary-btn showReplyFormBtnNew" data-review-id="{{ $review->id }}"
-                style="margin-top: auto;">Reply</button>
+                style="margin-top: auto; border_radius: 25%;"><i class="fa-regular fa-comment-dots"></i></button>
 
         </div>
     @else
@@ -53,7 +53,7 @@
             </div>
             @if ($review->status == 0)
                 <button class="btn obrien-button primary-btn showReplyFormBtnNew" data-review-id="{{ $review->id }}"
-                    style="margin-top: auto;">Reply</button>
+                    style="margin-top: auto;"><i class="fa-regular fa-comment-dots"></i></i></button>
             @endif
         </div>
     @endif

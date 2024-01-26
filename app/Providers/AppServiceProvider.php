@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderCancellation;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Models\ProductWarehouse;
 use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\View;
@@ -39,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Share users with all views
         View::share('users', User::all());
+
+        // Share notification quantity products with all views
+        View::share('notifications', ProductWarehouse::orderBy('quantity', 'asc')->get());
 
         // Share users with all views
         View::share('billOrders', Order::paginate(12));

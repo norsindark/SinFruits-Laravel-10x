@@ -174,18 +174,18 @@
                                 {{-- contact  --}}
                                 <div class="social-share mb-4">
                                     <span>Share :</span>
-                                    <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
-                                    <a href="#"><i class="fa fa-twitter-square twitter-color"></i></a>
-                                    <a href="#"><i class="fa fa-linkedin-square linkedin-color"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest-square pinterest-color"></i></a>
+                                    <a href="#"><i class="fa-brands fa-facebook"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-square-x-twitter"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-staylinked"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-pinterest"></i></i></a>
                                 </div>
 
 
                                 {{-- payment  --}}
-                                <div class="payment">
+                                {{-- <div class="payment">
                                     <a href="#"><img class="border" src="assets/images/payment/img-payment.png"
                                             alt="Payment"></a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -240,7 +240,10 @@
                                         <div class="review_address_inner">
 
                                             {{-- User Reviews --}}
-                                            @if ($reviews->isNotEmpty())
+                                            {{-- @php
+                                                dd(empty($reviews));
+                                            @endphp --}}
+                                            @if (is_countable($reviews) && count($reviews) > 0)
                                                 @foreach ($reviews as $review)
                                                     @include('client.pages.products.components.review', [
                                                         'review' => $review,
@@ -249,6 +252,7 @@
                                                 @endforeach
 
                                                 {{-- Pagination --}}
+
                                                 <div class="row">
                                                     <div class="col-sm-12 col-custom">
                                                         <div class="toolbar-bottom mt-30">
@@ -608,17 +612,18 @@
 
         {{-- reply form --}}
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 let replyButtons = document.querySelectorAll('.showReplyFormBtn, .showReplyFormBtnNew');
-        
-                replyButtons.forEach(function (button) {
-                    button.addEventListener('click', function () {
+
+                replyButtons.forEach(function(button) {
+                    button.addEventListener('click', function() {
                         // Lấy ID của review từ thuộc tính data-review-id
                         let reviewId = this.getAttribute('data-review-id');
-        
+
                         // Tìm form tương ứng với reviewId
-                        let form = document.querySelector('.replyForm[data-review-id="' + reviewId + '"]');
-        
+                        let form = document.querySelector('.replyForm[data-review-id="' + reviewId +
+                            '"]');
+
                         if (form.style.display === 'none' || form.style.display === '') {
                             form.style.display = 'block';
                         } else {
