@@ -15,8 +15,25 @@
                                     <a href="{{ route('dashboard.warehouses.create') }}" class="btn btn-primary">
                                         <i class="fa fa-plus"></i>
                                     </a>
+                                    {{-- <a href="{{ route('dashboard.warehouses.updateQuantitySold') }}"
+                                        class="btn btn-primary">Update Quantity
+                                        Sold</a> --}}
                                 </div>
                             </div>
+
+                            {{-- Notification --}}
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                            
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
                                     @if ($warehouses && count($warehouses) > 0)
@@ -85,6 +102,8 @@
 
             </div>
         </div>
+
+        {{-- comfirmDelete --}}
         <script>
             function confirmDelete(warehouseId) {
                 if (confirm('Are you sure you want to delete this category?')) {
@@ -92,14 +111,6 @@
                 }
             }
         </script>
-        <script>
-            var win = navigator.platform.indexOf('Win') > -1;
-            if (win && document.querySelector('#sidenav-scrollbar')) {
-                var options = {
-                    damping: '0.5'
-                }
-                Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-            }
-        </script>
+
     </body>
 @endsection

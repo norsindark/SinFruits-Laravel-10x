@@ -124,19 +124,6 @@
 
                                             {{-- Add Action --}}
                                             <div class="add-action d-flex position-absolute">
-                                                {{-- <form id="addToCartForm" action="{{ route('client.cart.add') }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <input type="hidden" name="quantity" value="1">
-
-                                                    <div class="add-to_cart">
-                                                        <button type="submit" id="addToCartButton"></button>
-                                                    </div>
-                                                </form>
-
-                                                <a href="javascript:;" title="Add To cart" id="addToCartLink"><i
-                                                        class="ion-bag"></i></a> --}}
                                                 <a href="{{ route('client.product.details', $product->title) }}"
                                                     title="Details"><i class="fa-solid fa-circle-info"></i></a>
                                             </div>

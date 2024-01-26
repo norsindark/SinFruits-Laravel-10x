@@ -174,18 +174,18 @@
                                 {{-- contact  --}}
                                 <div class="social-share mb-4">
                                     <span>Share :</span>
-                                    <a href="#"><i class="fa fa-facebook-square facebook-color"></i></a>
-                                    <a href="#"><i class="fa fa-twitter-square twitter-color"></i></a>
-                                    <a href="#"><i class="fa fa-linkedin-square linkedin-color"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest-square pinterest-color"></i></a>
+                                    <a href="#"><i class="fa-brands fa-facebook"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-square-x-twitter"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-staylinked"></i></i></a>
+                                    <a href="#"><i class="fa-brands fa-pinterest"></i></i></a>
                                 </div>
 
 
                                 {{-- payment  --}}
-                                <div class="payment">
+                                {{-- <div class="payment">
                                     <a href="#"><img class="border" src="assets/images/payment/img-payment.png"
                                             alt="Payment"></a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -240,38 +240,33 @@
                                         <div class="review_address_inner">
 
                                             {{-- User Reviews --}}
-                                            @if ($product->review && $product->productReviews->isNotEmpty())
-                                                @foreach ($product->productReviews as $review)
-                                                    <div class="pro_review mb-5">
-                                                        <div class="review_thumb" style="max-width: 75px; max-height: 75px">
-                                                            @if ($review->user->profile_image)
-                                                                <img alt="{{ $review->user->name }}"
-                                                                    src="{{ asset('storage/profile-images/' . $review->user->profile_image) }}">
-                                                            @else
-                                                            <i class="fa fa-user" style="font-size: 50px; width: 50px; height: 50px;"></i>
-                                                            @endif
-                                                        </div>
+                                            {{-- @php
+                                                dd(empty($reviews));
+                                            @endphp --}}
+                                            @if (is_countable($reviews) && count($reviews) > 0)
+                                                @foreach ($reviews as $review)
+                                                    @include('client.pages.products.components.review', [
+                                                        'review' => $review,
+                                                        'product' => $product,
+                                                    ])
+                                                @endforeach
 
-                                                        <div class="review_details">
-                                                            <div class="review_info mb-2">
-                                                                <div class="product-rating mb-2">
-                                                                    @for ($i = 1; $i <= 5; $i++)
-                                                                        <i
-                                                                            class="fa-{{ $i <= $review->rating ? 'solid' : 'regular' }} fa-star"></i>
-                                                                    @endfor
-                                                                </div>
-                                                                <h5>{{ $review->user->name }}
-                                                                    <span>{{ $review->created_at->diffForHumans() }}</span>
-                                                                </h5>
-                                                            </div>
-                                                            <p>{{ $review->comment }}</p>
+                                                {{-- Pagination --}}
+
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-custom">
+                                                        <div class="toolbar-bottom mt-30">
+                                                            <nav class="pagination pagination-wrap mb-10 mb-sm-0">
+                                                                <ul class="pagination">
+                                                                    {{ $reviews->links('vendor.pagination.bootstrap-5') }}
+                                                                </ul>
+                                                            </nav>
                                                         </div>
                                                     </div>
-                                                @endforeach
+                                                </div>
                                             @else
                                                 <p>No reviews available for this product.</p>
                                             @endif
-
 
 
 
@@ -321,7 +316,6 @@
                                             </div>
                                         @endauth
                                     </div>
-                                    <!-- End Single Content -->
                                 </div>
 
 
@@ -614,6 +608,32 @@
                 });
             });
         </script>
+
+
+        {{-- reply form --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                let replyButtons = document.querySelectorAll('.showReplyFormBtn, .showReplyFormBtnNew');
+
+                replyButtons.forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        // Lấy ID của review từ thuộc tính data-review-id
+                        let reviewId = this.getAttribute('data-review-id');
+
+                        // Tìm form tương ứng với reviewId
+                        let form = document.querySelector('.replyForm[data-review-id="' + reviewId +
+                            '"]');
+
+                        if (form.style.display === 'none' || form.style.display === '') {
+                            form.style.display = 'block';
+                        } else {
+                            form.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+
 
 
 

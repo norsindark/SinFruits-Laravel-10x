@@ -21,38 +21,12 @@ class CartsController extends Controller
         $this->cartService = $cartService;
     }
 
+    
     //index
     public function index()
     {
         return view('client.pages.carts.index');
     }
-
-    // public function index()
-    // {
-    //     $cartData = $this->cartService->getIndexData();
-
-    //     $userId = Auth::user()->id;
-    //     $cart = Cart::where('user_id', $userId)->first();
-
-    //     if (!$cart) {
-    //         return view('client.pages.carts.index', ['cartItems' => []]);
-    //     }
-
-    //     $cartItems = $cart->products;
-    //     $subTotal = $cartItems->sum(function ($item) {
-    //         return $item->product_details->price * $item->pivot->quantity;
-    //     });
-
-    //     $vat = $subTotal * 0.1;
-    //     $total = $subTotal + $vat;
-
-    //     $cartItems = $cartData['cartItems'];
-    //     $subTotal = $cartData['subTotal'];
-    //     $vat = $cartData['vat'];
-    //     $total = $cartData['total'];
-
-    //     return view('client.pages.carts.index', compact('cartItems', 'subTotal', 'vat', 'total'));
-    // }
 
 
     // add to cart 

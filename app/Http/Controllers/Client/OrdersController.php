@@ -111,4 +111,42 @@ class OrdersController extends Controller
 
         return response()->json(['success' => 'Order cancelled successfully! You will receive a refund of 90% of the order value after 3-7 days from the date of cancellation.']);
     }
+
+
+    // buy again
+    public function buyAgain(Order $order)
+    {
+        $originalProducts = $order->orderItems;
+
+
+        $cart = auth()->user()->carts;
+
+        foreach ($originalProducts as $originalProduct) {
+            // dd($originalProduct->productWarehouse->quantity);
+
+            if($originalProduct->quantity > $originalProduct->productWarehouse->quantity) {
+                return redirect()->back()->with('error', 'Products added to cart FAILED! Not enough quantity in warehouse!');
+            }
+
+
+            $existingCartItem = CartItem::where('product_id', $originalProduct->product->id)
+                ->where('cart_id', $cart->id)
+                ->first();
+
+            if ($existingCartItem) {
+                $existingCartItem->update([
+                    'quantity' => $existingCartItem->quantity + $originalProduct->quantity,
+                ]);
+            } else {
+                CartItem::create([
+                    'user_id' => auth()->user()->id,
+                    'product_id' => $originalProduct->product->id,
+                    'quantity' => $originalProduct->quantity,
+                    'cart_id' => $cart->id,
+                ]);
+            }
+        }
+
+        return redirect()->route('client.cart.index')->with('success', 'Products added to cart successfully!');
+    }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\Client\UsersController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Client\CommentsController;
+use App\Http\Controllers\Dashboard\CommentController;
 
 // Crawl Products
 Route::middleware(['auth', 'verified', 'role:1'])->group(function () {
@@ -69,7 +70,10 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
         Route::delete('/{warehouse}', [WarehouseController::class, 'destroy'])->name('dashboard.warehouses.destroy');
         Route::get('/{warehouse}/products', [WarehouseController::class, 'showProducts'])->name('dashboard.warehouses.showProducts');
 
-        // Route::get('/{warehouse}/edit', [WarehouseController::class, 'updateQuantity'])->name('dashboard.warehouses.updateQuantity');
+        Route::get('/update-quantity/{id}', [WarehouseController::class, 'showFormUpdate'])->name('dashboard.warehouses.updateQuantity');
+        Route::put('/update-quantity/{id}', [WarehouseController::class, 'updateQuantity'])->name('dashboard.warehouses.confirmUpdate');
+
+        // Route::get('/', [WarehouseController::class, 'updateQuantitySold'])->name('dashboard.warehouses.updateQuantitySold');
     });
 
     // products
@@ -105,6 +109,12 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     Route::prefix('/reports')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('dashboard.reports.index');
     });
+
+    //comments
+    Route::prefix('/comments')->middleware(['auth', 'verified'])->group(function () {
+        Route::get('/', [CommentController::class, 'index'])->name('dashboard.comments.index');
+        Route::post('/confirm/{commentId}',  [CommentController::class, 'removeComment'])->name('dashboard.comments.confirm');
+    });
 });
 
 
@@ -129,6 +139,7 @@ Route::prefix('/')->group(function () {
         Route::post('/cart/add', [CartsController::class, 'addToCart'])->middleware(['auth', 'verified'])->name('client.cart.add');
         Route::get('/search', [ProductsController::class, 'search'])->name('client.products.search');
         Route::get('/sorted', [ProductsController::class, 'sortProducts'])->name('client.products.sorted');
+        Route::post('/reply', [CommentsController::class, 'storeReplyComment'])->name('client.products.storeReply');
     });
 
 
@@ -150,6 +161,7 @@ Route::prefix('/')->group(function () {
     Route::prefix('/order')->middleware(['auth', 'verified'])->group(function () {
         Route::post('/create-order', [OrdersController::class, 'create'])->name('client.create.order');
         Route::post('/cancel', [OrdersController::class, 'cancelOrder'])->name('client.order.cancel');
+        Route::post('/buy-again/{order}', [OrdersController::class, 'buyAgain'])->name('client.orders.buyAgain');
     });
 
 
@@ -167,7 +179,7 @@ Route::prefix('/')->group(function () {
 
     //users
     Route::prefix('/users')->middleware(['auth'])->group(function () {
-        Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
+        // Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
         Route::post('/comments', [CommentsController::class, 'store'])->name('client.comments.store');
     });
 });

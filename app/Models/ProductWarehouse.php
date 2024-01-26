@@ -19,4 +19,9 @@ class ProductWarehouse extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'product_id');
+    }
 }

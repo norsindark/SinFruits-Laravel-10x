@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderCancellation;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Models\ProductWarehouse;
 use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\View;
@@ -40,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
         // Share users with all views
         View::share('users', User::all());
 
+        // Share notification quantity products with all views
+        View::share('notifications', ProductWarehouse::orderBy('quantity', 'asc')->get());
+
         // Share users with all views
         View::share('billOrders', Order::paginate(12));
 
@@ -61,17 +65,8 @@ class AppServiceProvider extends ServiceProvider
         // Share asc products with all views
         view()->share('ascProducts', Product::orderBy('name', 'asc')->get());
 
-        // Share rating products with all views
-        // View::share(
-        //     'reviewProducts',
-        //     DB::table('products')
-        //         ->join('product_reviews', 'products.id', '=', 'product_reviews.product_id')
-        //         ->orderByDesc('product_reviews.rating')
-        //         ->take(3)
-        //         ->get()
-        // );
-
-
+        // Share comments with all views
+        // View::share('comments', ProductReview::paginate(12));
 
         // Share carts with all views
         View::composer('*', function ($view) {
