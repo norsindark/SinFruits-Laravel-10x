@@ -61,17 +61,14 @@ class AppServiceProvider extends ServiceProvider
         // Share asc products with all views
         view()->share('ascProducts', Product::orderBy('name', 'asc')->get());
 
-        // Share rating products with all views
-        // View::share(
-        //     'reviewProducts',
-        //     DB::table('products')
-        //         ->join('product_reviews', 'products.id', '=', 'product_reviews.product_id')
-        //         ->orderByDesc('product_reviews.rating')
-        //         ->take(3)
-        //         ->get()
-        // );
-
-
+        // Share replies comment with all views
+        // View::composer('*', function ($view) {
+        //     $replies = ProductReview::whereNotNull('parent_id')->paginate(4);
+    
+        //     if ($replies->count() > 0) {
+        //         $view->with('replies', $replies);
+        //     }
+        // });
 
         // Share carts with all views
         View::composer('*', function ($view) {

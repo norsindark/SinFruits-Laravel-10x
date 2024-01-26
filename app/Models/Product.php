@@ -56,6 +56,7 @@ class Product extends Model
 
 
 
+
     //product_images
     public function productImages()
     {

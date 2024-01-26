@@ -129,6 +129,7 @@ Route::prefix('/')->group(function () {
         Route::post('/cart/add', [CartsController::class, 'addToCart'])->middleware(['auth', 'verified'])->name('client.cart.add');
         Route::get('/search', [ProductsController::class, 'search'])->name('client.products.search');
         Route::get('/sorted', [ProductsController::class, 'sortProducts'])->name('client.products.sorted');
+        Route::post('/reply', [CommentsController::class, 'storeReplyComment'])->name('client.products.storeReply');
     });
 
 
