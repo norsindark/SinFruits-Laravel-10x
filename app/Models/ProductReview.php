@@ -17,7 +17,7 @@ class ProductReview extends Model
         return $this->belongsTo(Product::class);
     }
 
-    //user
+    //users
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -28,7 +28,8 @@ class ProductReview extends Model
     {
         return $this->hasMany(ProductReview::class, 'parent_id');
     }
-    //paren cmt
+
+    //paren comments
     public function parent()
     {
         return $this->belongsTo(ProductReview::class, 'parent_id');

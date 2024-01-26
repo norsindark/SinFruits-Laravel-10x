@@ -1,5 +1,5 @@
 <div class="pro_review mb-5" style="margin-left: 100px;">
-    <div class="review_thumb" style="max-width: 50px; max-height: 50px">
+    <div class="review_thumb" style="max-width: 40px; max-height: 40px; min-width: 40px !important;">
         @if ($reply->user->profile_image)
             <img alt="{{ $reply->user->name }}"
                 src="{{ asset('storage/profile-images/' . $reply->user->profile_image) }}">
@@ -10,7 +10,7 @@
 
     <div class="review_details">
         <div class="review_info mb-2">
-            <h5>{{ $reply->user->name }}
+            <h5>{{ $reply->user->name }} replied {{ $review->user->name}}
                 <span>{{ $reply->created_at->diffForHumans() }}</span>
             </h5>
         </div>

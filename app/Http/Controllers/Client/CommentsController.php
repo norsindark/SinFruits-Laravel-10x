@@ -13,7 +13,16 @@ class CommentsController extends Controller
 {
     public function store(CommentRequest  $request)
     {
-        $validator = Validator::make($request->all(), $this->rules());
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'comment' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::notIn(config('app.forbidden_words')),
+            ],
+            'rating' => 'nullable|integer|between:1,5',
+        ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -22,8 +31,9 @@ class CommentsController extends Controller
         $data = [
             'user_id' => auth()->id(),
             'product_id' => $request->input('product_id'),
-            'parent_id' => $request->input('parent_id'),
         ];
+
+
 
         if ($request->filled('comment')) {
             $data['comment'] = $request->input('comment');
