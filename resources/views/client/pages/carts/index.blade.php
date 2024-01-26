@@ -36,17 +36,6 @@
                             <div class="cart-table table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
-                                        @if (session('success'))
-                                            <div class="alert alert-success">
-                                                {{ session('success') }}
-                                            </div>
-                                        @endif
-
-                                        @if (session('error'))
-                                            <div class="alert alert-danger">
-                                                {{ session('error') }}
-                                            </div>
-                                        @endif
 
                                         <tr>
                                             <th class="pro-thumbnail">Image</th>
@@ -146,12 +135,12 @@
 
                             {{-- Coupon  --}}
                             <div class="cart-update-option d-block d-md-flex justify-content-between">
-                                <div class="apply-coupon-wrapper">
+                                {{-- <div class="apply-coupon-wrapper">
                                     <form action="#" method="post" class=" d-block d-md-flex">
                                         <input type="text" placeholder="Enter Your Coupon Code" required />
                                         <button class="btn obrien-button primary-btn">Apply Coupon</button>
                                     </form>
-                                </div>
+                                </div> --}}
                                 {{-- <div class="cart-update mt-sm-16">
                                     <a href="#" class="btn obrien-button primary-btn">Update Cart</a>
                                 </div> --}}
