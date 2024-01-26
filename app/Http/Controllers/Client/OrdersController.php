@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\OrderCancellation;
 use App\Models\ProductWarehouse;
 use App\Models\ProductDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
@@ -116,37 +117,47 @@ class OrdersController extends Controller
     // buy again
     public function buyAgain(Order $order)
     {
-        $originalProducts = $order->orderItems;
+        try {
+            DB::beginTransaction();
 
+            $originalProducts = $order->orderItems;
 
-        $cart = auth()->user()->carts;
+            $cart = auth()->user()->carts;
 
-        foreach ($originalProducts as $originalProduct) {
-            // dd($originalProduct->productWarehouse->quantity);
+            foreach ($originalProducts as $originalProduct) {
 
-            if($originalProduct->quantity > $originalProduct->productWarehouse->quantity) {
-                return redirect()->back()->with('error', 'Products added to cart FAILED! Not enough quantity in warehouse!');
+                if ($originalProduct->quantity > $originalProduct->productWarehouse->quantity) {
+                    return redirect()->back()->with('error', 'Products added to cart FAILED! Not enough quantity in stocks!');
+                }
+
+                $existingCartItem = CartItem::where('product_id', $originalProduct->product->id)
+                    ->where('cart_id', $cart->id)
+                    ->first();
+
+                if ($existingCartItem) {
+
+                    if ($existingCartItem->quantity + $originalProduct->quantity > $originalProduct->productWarehouse->quantity) {
+                        throw new \Exception('Not enough quantity in stocks!');
+                    }
+
+                    $existingCartItem->update([
+                        'quantity' => $existingCartItem->quantity + $originalProduct->quantity,
+                    ]);
+                } else {
+                    CartItem::create([
+                        'user_id' => auth()->user()->id,
+                        'product_id' => $originalProduct->product->id,
+                        'quantity' => $originalProduct->quantity,
+                        'cart_id' => $cart->id,
+                    ]);
+                }
             }
 
-
-            $existingCartItem = CartItem::where('product_id', $originalProduct->product->id)
-                ->where('cart_id', $cart->id)
-                ->first();
-
-            if ($existingCartItem) {
-                $existingCartItem->update([
-                    'quantity' => $existingCartItem->quantity + $originalProduct->quantity,
-                ]);
-            } else {
-                CartItem::create([
-                    'user_id' => auth()->user()->id,
-                    'product_id' => $originalProduct->product->id,
-                    'quantity' => $originalProduct->quantity,
-                    'cart_id' => $cart->id,
-                ]);
-            }
+            DB::commit();
+            return redirect()->route('client.cart.index')->with('success', 'Products added to cart successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Products added to cart FAILED! ' . $e->getMessage());
         }
-
-        return redirect()->route('client.cart.index')->with('success', 'Products added to cart successfully!');
     }
 }
