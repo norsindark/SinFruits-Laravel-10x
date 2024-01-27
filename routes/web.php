@@ -148,7 +148,11 @@ Route::prefix('/')->group(function () {
         Route::get('/', [CartsController::class, 'index'])->name('client.cart.index');
         Route::post('/remove', [CartsController::class, 'remove'])->name('client.cart.remove');
         Route::put('/update-quantity/{productId}', [CartsController::class, 'updateQuantity'])->name('client.cart.updateQuantity');
+        // Route::put('/update-quantity', [CartsController::class, 'updateQuantity']);
+
     });
+
+
 
 
     // check out
