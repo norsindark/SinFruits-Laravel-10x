@@ -84,7 +84,7 @@
 
 
                                                 {{-- update quantity  --}}
-                                                <td class="pro-quantity">
+                                                {{-- <td class="pro-quantity">
                                                     <div class="quantity">
                                                         <form id="updateQuantityForm"
                                                             action="{{ route('client.cart.updateQuantity', ['productId' => $item->id]) }}"
@@ -104,7 +104,25 @@
                                                             <button type="button" onclick="confirmUpdate()">Update</button>
                                                         </form>
                                                     </div>
+                                                </td> --}}
+
+
+
+                                                <td class="pro-quantity">
+                                                    <div class="quantity">
+                                                        <form id="updateQuantityForm" data-product-id="{{ $item->id }}">
+                                                            {{-- @csrf --}}
+                                                            @method('put')
+                                                            <input class="cart-plus-minus text-center quantity-input"
+                                                                style="border-radius: 6px; font-size: 18px; font-weight: 600;"
+                                                                value="{{ $item->pivot->quantity }}" type="text"
+                                                                name="quantity" onchange="updateQuantity(this)">
+                                                        </form>
+                                                    </div>
                                                 </td>
+
+
+
 
 
                                                 {{-- sub total  --}}
@@ -193,13 +211,40 @@
 
 
         {{-- update quantity --}}
-        <script>
+        {{-- <script>
             function confirmUpdate() {
                 if (confirm('Are you sure you want to save the quantity update?')) {
                     document.getElementById('updateQuantityForm').submit();
                 }
             }
+        </script> --}}
+
+        <script>
+            function updateQuantity(inputElement) {
+                var newQuantity = parseInt(inputElement.value, 10);
+                var productId = document.getElementById('updateQuantityForm').getAttribute('data-product-id');
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/cart/update-quantity/' + productId,
+                    data: {
+                        quantity: newQuantity,
+                        productId: productId,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        location.reload();
+                        console.log('Update successful');
+                    },
+                    error: function(error) {
+                        console.error('Error updating quantity:', error);
+                    }
+                });
+            }
         </script>
+
 
 
         {{-- proceed checkout --}}
