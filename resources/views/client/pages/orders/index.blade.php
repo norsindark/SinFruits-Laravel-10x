@@ -57,7 +57,7 @@
                                         Cancel
                                     </button>
                                 @else
-                                    <span class=" btn obrien-button-2 primary-color rounded-0">Canceled
+                                    <span class=" btn obrien-button-2 primary-color rounded-0"> Can't Cancel
                                     </span>
                                 @endif
                             </td>
