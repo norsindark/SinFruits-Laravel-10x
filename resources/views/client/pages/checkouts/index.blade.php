@@ -70,8 +70,11 @@
 
 
                         {{-- User Details --}}
+
                         <div class="col-lg-6 col-12">
-                            <form action="{{ route('client.create.order') }}" method="post">
+                            <form action="{{ route('client.payments.createPayment') }}" method="post" id="orderForm">
+
+                                {{-- <form action="#" method="post" id="orderForm"> --}}
                                 @csrf
                                 <div class="checkbox-form">
                                     <h3>Billing Details</h3>
@@ -123,16 +126,11 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    {{-- Submit buy --}}
-                                    <div class="order-button-payment">
-                                        <input value="Place order" type="submit">
-                                    </div>
                                 </div>
-                            </form>
+
+
+
                         </div>
-
-
                         {{-- Orders --}}
                         <div class="col-lg-6 col-12">
                             <div class="your-order">
@@ -155,9 +153,6 @@
 
                                         {{-- Item details  --}}
                                         <tbody>
-                                            {{-- @php
-                                                $totalPrice = 0;
-                                            @endphp --}}
                                             @foreach ($cartItems as $item)
                                                 <tr class="cart_item">
 
@@ -194,8 +189,8 @@
                                                             {{ number_format($subTotal, 0, '.', '.') }} VNĐ
                                                         </span>
                                                         {{-- @php
-                                                            $totalPrice += $item->product_details->price * $item->pivot->quantity;
-                                                        @endphp --}}
+                                                                $totalPrice += $item->product_details->price * $item->pivot->quantity;
+                                                            @endphp --}}
                                                     </Strong>
                                                 </td>
                                             </tr>
@@ -216,7 +211,8 @@
                                                 <th>Order Total</th>
                                                 <td class="text-center">
                                                     <strong>
-                                                        <span class="amount">{{ number_format($total, 0, '.', '.') }} VNĐ
+                                                        <span class="amount">{{ number_format($total, 0, '.', '.') }}
+                                                            VNĐ
                                                         </span>
                                                     </strong>
                                                 </td>
@@ -234,34 +230,95 @@
                                         {{-- method --}}
                                         <div id="accordion">
                                             <div class="card">
+
+                                                {{-- icon --}}
                                                 <div class="card-header" id="#payment-1">
                                                     <h5 class="panel-title mb-2">
                                                         <a href="#" class="" data-bs-toggle="collapse"
                                                             data-bs-target="#collapseOne" aria-expanded="true"
                                                             aria-controls="collapseOne">
-                                                            Banking.
+                                                            <img style="max-height: 100px; max-width: 100px;"
+                                                                src="{{ asset('/assets/images/Logo-VNPAY-QR.png') }}"
+                                                                alt="">
                                                         </a>
                                                     </h5>
                                                 </div>
+
+                                                {{-- total amount --}}
+                                                <input class="form-control" data-val="true"
+                                                    data-val-number="The field Amount must be a number."
+                                                    data-val-required="The Amount field is required." id="amount"
+                                                    max="100000000" min="1" name="amount" type="number"
+                                                    value="{{ number_format($total, 0, '', '') }}" readonly hidden />
+
+                                                <h6>Select a payment method</h6>
+
                                                 <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                                    <div class="card-body mb-2 mt-2">
-                                                        <p>Make your payment directly into our bank account. Please use your
-                                                            Order ID as the payment reference. Your order won’t be shipped
-                                                            until the funds have cleared in our account.</p>
+                                                    <div class="form-group" style="margin-top: 12px">
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" checked="true"
+                                                                id="bankCode1" name="bankCode" value="">
+                                                            <label class="form-check-label" for="bankCode1">VNPAYQR
+                                                                payment
+                                                                gateway</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" id="bankCode2"
+                                                                name="bankCode" value="VNPAYQR">
+                                                            <label class="form-check-label" for="bankCode2">Pay with
+                                                                applications
+                                                                that support VNPAY QR</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" id="bankCode3"
+                                                                name="bankCode" value="VNBANK">
+                                                            <label class="form-check-label" for="bankCode3">Payment
+                                                                via
+                                                                card
+                                                                ATM/Fin
+                                                                domestic account</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" id="bankCode4"
+                                                                name="bankCode" value="INTCARD">
+                                                            <label class="form-check-label" for="bankCode4">Payment
+                                                                via
+                                                                national
+                                                                card
+                                                                international</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" style="margin-top: 12px">
+                                                        <h6>Select payment interface language:</h6>
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" checked="true"
+                                                                id="language1" name="language" value="vn">
+                                                            <label class="form-check-label"
+                                                                for="language1">Vietnamese</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input type="radio" class="form-check-input" id="language2"
+                                                                name="language" value="en">
+                                                            <label class="form-check-label"
+                                                                for="language2">English</label>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                
                                             </div>
 
+                                            {{-- Submit buy --}}
+                                            @if ($cartItems->count() > 0)
+                                                <div class="order-button-payment">
+                                                    <input value="Place order" onclick="confirmPayment()" readonly>
+                                                </div>
+                                            @endif
                                         </div>
-
-                                        {{-- Submit buy --}}
-                                        {{-- <div class="order-button-payment">
-                                            <input value="Place order" type="submit">
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </form>
                     </div>
 
 
@@ -278,14 +335,43 @@
             </div>
 
 
-
-            {{-- Support --}}
-
-            {{-- footer --}}
-
         </div>
 
+        {{-- submit place order --}}
+        <script>
+            function confirmPayment() {
+                if (confirm('Are you sure you want to Place orders and Proceed with Payment?')) {
+                    document.getElementById('orderForm').submit();
+                }
+            }
+        </script>
 
+        {{-- pay --}}
+        {{-- <script>
+            function pay() {
+                window.location.href = "{{ route('client.payments.create') }}";
+            }
+        </script> --}}
 
     </body>
+
+    <style>
+        .order-button-payment input {
+            background: #1B1B1C;
+            border: medium none;
+            color: #ffffff;
+            font-size: 17px;
+            height: 50px;
+            margin: 20px 0 0;
+            padding: 0;
+            text-transform: uppercase;
+            -webkit-transition: .3s;
+            -o-transition: .3s;
+            transition: .3s;
+            width: 100%;
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
 @endsection

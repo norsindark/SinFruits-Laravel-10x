@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
 {
+    protected $order;
+
+    public function __construct(Order $order)
+    {
+        $this->order = $order;
+    }
 
     //index
     public function index()
@@ -23,19 +29,26 @@ class OrdersController extends Controller
 
 
     // create order
-    public function create(Request $request)
+    public function create()
     {
-        $validator = Validator::make($request->all(), [
-            'full_name' => 'required|string',
-            'address' => 'required|string',
-            'email' => 'required|email',
-            'phone' => 'required|string',
-            'order_notes' => 'nullable|string',
-        ]);
+        $checkoutData = session('checkout_data');
+        $request = new Request($checkoutData);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'full_name' => 'required|string',
+        //     'address' => 'required|string',
+        //     'email' => 'required|email',
+        //     'phone' => 'required|string',
+        //     'order_notes' => 'nullable|string',
+        // ]);
+
+
+
+        // if ($validator->fails()) {
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // }
+
+        // dd($request->input('amount'));
 
         $order = Order::create([
             'user_id' => auth()->user()->id,
@@ -74,13 +87,13 @@ class OrdersController extends Controller
             $orderItem->save();
         }
 
-        $order->total_amount += $order->total_amount * 0.1;
+        $order->total_amount = $request->input('amount');
 
         $order->save();
 
         CartItem::where('cart_id', $cartId)->delete();
 
-        return redirect()->route('client.cart.index')->with('success', 'Order created successfully');
+        // return redirect()->route('client.payments.create')->with('success', 'Order created successfully');
     }
 
 
