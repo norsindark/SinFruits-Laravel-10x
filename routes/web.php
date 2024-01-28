@@ -19,6 +19,7 @@ use App\Http\Controllers\Client\UsersController;
 use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Client\CommentsController;
+use App\Http\Controllers\Client\PaymentsController;
 use App\Http\Controllers\Dashboard\CommentController;
 
 // Crawl Products
@@ -185,6 +186,22 @@ Route::prefix('/')->group(function () {
     Route::prefix('/users')->middleware(['auth'])->group(function () {
         // Route::post('/logout', 'Auth\UsersController@logout')->middleware(['auth'])->name('client.user.logout');
         Route::post('/comments', [CommentsController::class, 'store'])->name('client.comments.store');
+    });
+
+
+    // vnpay
+    Route::prefix('/payments')->middleware(['auth'])->group(function () {
+        Route::get('/', [PaymentsController::class, 'index'])->name('client.payments.index');
+
+        // show form
+        Route::get('/create', [PaymentsController::class, 'create'])->name('client.payments.create');
+
+        // create payment
+        Route::post('/create-payment', [PaymentsController::class, 'createPayment'])->name('client.payments.createPayment');
+
+        // notify
+        Route::get('/vnpay/response', [PaymentsController::class, 'vnpayResponse']);
+        // Route::post('/vnpay/notify', [PaymentsController::class, 'vnpayNotify']);
     });
 });
 

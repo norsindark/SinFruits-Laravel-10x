@@ -21,7 +21,7 @@ class UsersController extends Controller
     public function index()
     {
         $userId = Auth::user()->id;
-        $orders = Order::where('user_id', $userId)->get();
+        $orders = Order::where('user_id', $userId)->paginate(6);
         return view('client.pages.users.profile', compact('orders'));
     }
 

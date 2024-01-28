@@ -40,11 +40,11 @@
                             <td>
                                 <a href="#" class="btn obrien-button-2 primary-color rounded-0 view-btn"
                                     data-order-id="{{ $item->id }}">
-                                    View
+                                    <i class="fa-solid fa-eye"></i>
                                 </a>
 
                                 <a href="#" class="btn obrien-button-2 primary-color rounded-0 buy-again-link"
-                                    data-form-id="{{ $count }}">Buy Again</a>
+                                    data-form-id="{{ $count }}"><i class="fa-solid fa-basket-shopping"></i></a>
 
                                 <form action="{{ route('client.orders.buyAgain', $item) }}" method="POST"
                                     class="buy-again-form" data-form-id="{{ $count }}" style="display: none;">
@@ -57,7 +57,8 @@
                                         Cancel
                                     </button>
                                 @else
-                                    <span class=" btn obrien-button-2 primary-color rounded-0"> Can't Cancel
+                                    <span class=" btn obrien-button-2 primary-color rounded-0"><i
+                                            class="fa-solid fa-ban"></i>
                                     </span>
                                 @endif
                             </td>
@@ -148,8 +149,14 @@
 
                         @php $count++; @endphp
                     @endforeach
+
                 </tbody>
             </table>
         </div>
+        {{-- pagination --}}
+        <div style="padding: 0px 120px; margin-top:24px;">
+            {{ $orders->links('vendor.pagination.bootstrap-5') }}
+        </div>
+        {{-- pagination --}}
     </div>
 </div>
