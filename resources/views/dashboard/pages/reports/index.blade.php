@@ -28,6 +28,9 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6>Reports Table: Processed
                                     </h6>
+                                    <a href="javascript:;" id="exportButton" onclick="confirmExport()">
+                                        <i class="fa fa-plus"></i> Export Excel
+                                    </a>
                                 </div>
                             </div>
 
@@ -199,6 +202,16 @@
             });
         </script>
 
+
+        {{-- export excel --}}
+        <script>
+            function confirmExport() {
+                var isConfirmed = confirm("Bạn có chắc chắn muốn xuất Excel không?");
+                if (isConfirmed) {
+                    window.location.href = "{{ route('dashboard.export.revenue') }}";
+                }
+            }
+        </script>
 
     </body>
 @endsection
