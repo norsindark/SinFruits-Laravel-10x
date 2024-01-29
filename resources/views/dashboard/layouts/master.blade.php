@@ -15,6 +15,9 @@
     <link id="pagestyle" href="{{ asset('src/assets/css/soft-ui-dashboard.css?v=1.0.7') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     {{-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -44,6 +47,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="{{ asset('src/assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
     <script src="{{ asset('src/assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
+
 
     <script>
         var ctx = document.getElementById("chart-bars").getContext("2d");

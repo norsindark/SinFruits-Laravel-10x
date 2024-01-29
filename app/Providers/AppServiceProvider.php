@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\View;
 use App\Services\CartService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -98,5 +99,56 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        //share chart
+        View::share('incomeMonth', Order::whereMonth('created_at', Carbon::now()->month)->sum('total_amount'));
+
+        View::share('incomeThisWeek', Order::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('total_amount'));
+
+        View::share('incomeYear', Order::whereYear('created_at', Carbon::now()->year)->sum('total_amount'));
+
+        $incomeThisYear = $this->calculateIncomeThisYear();
+        View::share('incomeThisYear', $incomeThisYear);
+
+        $incomeThisMonth = $this->calculateIncomeThisMonth();
+        View::share('incomeThisMonth', $incomeThisMonth);
+    }
+
+    private function calculateIncomeThisYear()
+    {
+        $incomeThisYear = [];
+        $currentYear = now()->year;
+
+        $ordersThisYear = Order::whereYear('created_at', $currentYear)->get();
+
+        for ($month = 1; $month <= 12; $month++) {
+            $incomeThisYear[$month] = 0;
+        }
+
+        foreach ($ordersThisYear as $order) {
+            $month = $order->created_at->month;
+            $incomeThisYear[$month] += $order->total_amount;
+        }
+
+        return $incomeThisYear;
+    }
+
+    private function calculateIncomeThisMonth()
+    {
+        $incomeThisMonth = [];
+        $currentMonth = now()->month;
+
+        $ordersThisMonth = Order::whereMonth('created_at', $currentMonth)->get();
+
+        for ($day = 1; $day <= 31; $day++) {
+            $incomeThisMonth[$day] = 0;
+        }
+
+        foreach ($ordersThisMonth as $order) {
+            $day = $order->created_at->day;
+            $incomeThisMonth[$day] += $order->total_amount;
+        }
+
+        return $incomeThisMonth;
     }
 }

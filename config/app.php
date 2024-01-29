@@ -51,6 +51,8 @@ return [
     'providers' => ServiceProvider::defaultProviders()->merge([
         // Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
         
+        // Maatwebsite\Excel\ExcelServiceProvider::class,
+
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
@@ -62,6 +64,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        // 'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 
