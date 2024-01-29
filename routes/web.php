@@ -109,6 +109,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:1'])->group(f
     // report
     Route::prefix('/reports')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('dashboard.reports.index');
+        Route::get('/export-revenue', [ReportController::class, 'exportRevenueReport'])->name('dashboard.export.revenue');
     });
 
     //comments
