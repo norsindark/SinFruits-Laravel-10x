@@ -33,7 +33,7 @@
                             @endif
 
                             <div class="card-body ">
-                                <form action="{{ route('dashboard.products.store') }}" method="POST">
+                                <form action="{{ route('dashboard.products.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="mb-3">
@@ -45,13 +45,6 @@
                                         <label for="name" class="form-label">Title:</label>
                                         <input type="text" class="form-control" id="title" name="title" required>
                                     </div>
-
-                                    {{-- <div class="mb-3">
-                                        <label for="image_path" class="form-label">Product Images:</label>
-                                        <input type="file" class="form-control" id="image_path" name="image_path[]"
-                                            accept="image/*" multiple required>
-                                    </div> --}}
-
 
                                     <div class="mb-3">
                                         <label for="name" class="form-label">Price:</label>
@@ -79,6 +72,11 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <label for="image_path" class="form-label">Images:</label>
+                                        <input type="file" class="form-control" id="image_path" name="image_path[]" multiple required>
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label for="category_id" class="form-label">Warehouses:</label>
                                         <select class="form-control" id="warehouse_id" name="warehouse_id" required>
                                             @foreach ($warehouses as $warehouse)
@@ -86,9 +84,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
-                                    <!-- Add any other input fields as needed -->
-
                                     <button type="submit" class="btn btn-primary">Create Product</button>
                                 </form>
                             </div>

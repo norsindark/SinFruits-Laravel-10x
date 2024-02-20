@@ -105,7 +105,7 @@
                                                     </h6>
                                                     <p class="text-xs text-secondary mb-0 ">
                                                         <i class="fa fa-clock me-1"></i>
-                                                        {{ $item->created_at->diffForHumans() }}
+                                                        {{-- {{ $item->created_at->diffForHumans() }} --}}
                                                     </p>
                                                 </div>
                                             </div>

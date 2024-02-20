@@ -82,7 +82,9 @@
                                                 {{-- Rating --}}
                                                 <div class="product-rating">
                                                     @php
-                                                        $averageRating = $product->reviews->avg('rating');
+                                                        // $averageRating = $product->reviews->avg('rating');
+                                                        $averageRating = 1;
+
                                                     @endphp
 
                                                     @for ($i = 1; $i <= 5; $i++)

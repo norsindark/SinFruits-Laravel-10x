@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\ProductDetail;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -40,10 +41,13 @@ class ProductController extends Controller
             'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        $currentDateTime = Carbon::now();
+
         $product = Product::create([
             'name' => $request->input('name'),
             'title' => $request->input('title'),
             'category_id' => $request->input('category_id'),
+            'created_at' => $currentDateTime,
         ]);
 
 
@@ -53,17 +57,20 @@ class ProductController extends Controller
             'description' => $request->input('description'),
         ]);
 
-
-        // if ($request->hasFile('image_path')) {
-
-        //     $images = [];
-        //     foreach ($request->file('image_path') as $image) {
-        //         $imageName = 'product_image_' . time() . '_' . uniqid() . '.jpg';
-        //         $images[] = ['product_id' => $product->id, 'image_path' => asset('storage/products/' . $imageName)];
-        //         Storage::put('public/products/' . $imageName);
-        //     }
-        //     ProductImage::insert($images);
-        // }
+        if ($request->hasFile('image_path')) {
+            $images = $request->file('image_path');
+            foreach ($images as $image) {
+                $imageContents = file_get_contents($image->path()); 
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(storage_path('app/public/products'), $imageName); 
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => 'http://127.0.0.1:8000/storage/products/' . $imageName,
+                ]);
+            }
+        }
+        
+        
 
         $product->warehouses()->attach([
             $request->input('warehouse_id') => ['quantity' => $request->input('quantity')],
@@ -71,25 +78,6 @@ class ProductController extends Controller
 
         return redirect()->route('dashboard.products.index')->with('success', 'Product created successfully.');
     }
-
-    //save image
-    // public function saveImages(array $images, $productId)
-    // {
-    //     $imageData = [];
-
-    //     foreach ($images as $image) {
-    //         $imageName = 'product_image_' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-    //         $image->storeAs('public/products', $imageName);
-
-    //         $imageData[] = [
-    //             'product_id' => $productId,
-    //             'image_path' => 'products/' . $imageName,
-    //         ];
-    //     }
-
-    //     ProductImage::insert($imageData);
-    // }
-
 
     //show form edit
     public function show(Product $product)
